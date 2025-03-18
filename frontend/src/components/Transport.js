@@ -30,6 +30,9 @@ const Transport = () => {
       });
   }, []);
 
+  const completedTransport = transport.filter((item) => item.flag)
+  const inCompletedTransport = transport.filter((item) => !item.flag)
+
   //popup form functions
   const openModal = (item) => {
     setSelectedItem(item);
@@ -102,13 +105,44 @@ const Transport = () => {
         </aside>
       </div>
 
-
-
-
       <div className="w-[80vw] h-[85vh] fixed top-0 right-0">
 
-        {/* top */}
-        <div className="w-5/6 h-48 bg-orange-200 mx-auto mt-8"></div>
+
+        {/* completed transports*/}
+        <div className="w-5/6 h-48  bg-gray-900 mx-auto mt-8">
+          <span className="text-white">Completed Transport</span>
+          <div className="h-4/5 overflow-y-auto scrollbar-hide">
+            <table className="w-full mx-aut shadow-md">
+              <thead className="bg-gray-700 text-white sticky top-0 z-5">
+                <tr className="text-center w-auto">
+                  <th className="px-4 py-2">ID</th>
+                  <th className="px-4 py-2">Driver</th>
+                  <th className="px-4 py-2">Vehical</th>
+                  <th className="px-4 py-2">Date</th>
+                  <th className="px-4 py-2">To</th>
+                  <th className="px-4 py-2">Qunatity</th>
+                </tr>
+              </thead>
+              <tbody className="max-h-4/5 text-white text-sm">
+                {completedTransport.map((item) => (
+                  <tr key={item.id} className="text-center">
+                    <td className="pl-2">{item.transport_id}</td>
+                    <td className="pl-2">{item.driver_name}</td>
+                    <td className="pl-2">{item.vehicle_no}</td>
+                    <td className="w-auto pl-2">
+                      {item.transport_date
+                        ? item.transport_date.slice(0, 10)
+                        : "N/A"}
+                    </td>
+                    <td className="pl-2">{item.destination}</td>
+                    <td className="">{item.quantity}</td>
+                    
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         {/* scheduled transport */}
         <div className="w-5/6 h-48 bg-gray-900 mx-auto my-6">
@@ -127,7 +161,7 @@ const Transport = () => {
                 </tr>
               </thead>
               <tbody className="max-h-4/5 text-white text-sm">
-                {transport.map((item) => (
+                {inCompletedTransport.map((item) => (
                   <tr key={item.id} className="text-center">
                     <td className="pl-2">{item.transport_id}</td>
                     <td className="pl-2">{item.driver_name}</td>
@@ -158,15 +192,15 @@ const Transport = () => {
                 ))}
               </tbody>
             </table>
-
           </div>
-            <button className="absolute bottom-3 right-24 bg-blue-500 text-white px-6 py-1 rounded" onClick={() => openAddModal()}>
-              Add
-            </button>
+          <button
+            className="absolute bottom-3 right-24 bg-blue-500 text-white px-6 py-1 rounded"
+            onClick={() => openAddModal()}
+          >
+            Add
+          </button>
         </div>
       </div>
-
-
 
       {/* popup form to update or delete*/}
       {isModalOpen && (
@@ -204,7 +238,7 @@ const Transport = () => {
               <label className="block mb-2">Destination</label>
               <input
                 type="text"
-                defaultValue={selectedItem?.destination                }
+                defaultValue={selectedItem?.destination}
                 className="w-full p-2 border rounded mb-4"
               />
               <label className="block mb-2">Quantity</label>
