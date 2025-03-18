@@ -5,9 +5,9 @@ const cookieParser = require('cookie-parser')
 require('./connection.js')
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
-const Comments = require('./model/commentSchema')
 const Inventory = require('./model/inventorySchema')
-const {isGuest} = require("./middleware/auth")
+const {isGuest} = require("./middleware/auth");
+const Transport = require('./model/transportSchema.js');
 
 
 app.use(cors({
@@ -28,8 +28,13 @@ app.get('/', (req, res) => {
 })
 
 app.get('/inventory', isGuest,async (req, res) => {
-    console.log("hy");
-    const items = await Inventory.find().limit(10);
+    const items = await Inventory.find();
+    console.log(items);
+    res.send(items)
+})
+
+app.get('/transport', isGuest,async (req, res) => {
+    const items = await Transport.find();
     console.log(items);
     res.send(items)
 })

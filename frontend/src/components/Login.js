@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
-    
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
@@ -15,19 +14,31 @@ const Login = () => {
     e.preventDefault();
     console.log("Login data:", formData);
     const url = "http://localhost:5000/auth/login";
-    console.log("before")
-    const response = await axios.post(url, formData,{
-        withCredentials: true,  // ✅ Important: Send cookies
-      });
-    console.log("after")
-    navigate("/home")
+    console.log("before");
+    const response = await axios.post(url, formData, {
+      withCredentials: true, // ✅ Important: Send cookies
+    });
+
+    // console.log(response.data.token);
+
+    const data = response.data;
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      navigate("/landing");
+    } else {
+      alert("Invalid login");
+    }
+
+
+    console.log("after");
+    // navigate("/landing");
 
     if (response) {
       console.log(response);
     } else {
       console.log("error");
     }
-    alert("Login successful (dummy function)");
   };
 
   return (

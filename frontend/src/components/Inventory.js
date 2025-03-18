@@ -1,16 +1,25 @@
 import React from "react";
 import axios from "axios";
+import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Footer from "./Footer";
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [newItem, setNewItem] = useState({
+    item_name: "",
+    quantity: "",
+    reorder_level: "",
+  });
 
   useEffect(() => {
-    axios.get("http://localhost:5000/inventory",{
-      withCredentials: true,  // ✅ Important: Send cookies
-    })  // Update if deployed
+    axios
+      .get("http://localhost:5000/inventory", {
+        withCredentials: true, // ✅ Important: Send cookies
+      }) // Update if deployed
       .then((response) => {
         setInventory(response.data);
       })
@@ -18,6 +27,26 @@ const Inventory = () => {
         console.error("Error fetching inventory data:", error);
       });
   }, []);
+
+  //popup form functions
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
+
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+    setNewItem({ item_name: "", quantity: "", reorder_level: "" });
+  };
 
   return (
     <>
@@ -66,13 +95,13 @@ const Inventory = () => {
       <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
         <div className="max-h-[400px] overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
-            <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-10">
+            <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
-                <th class="px-4 py-2">ID</th>
-                <th class="px-4 py-2">Name</th>
-                <th class="px-4 py-2">Quantity</th>
-                <th class="px-4 py-2">Reorder Level</th>
-                <th class="px-4 py-2">Action</th>
+                <th className="px-4 py-2">ID</th>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Quantity</th>
+                <th className="px-4 py-2">Reorder Level</th>
+                <th className="px-4 py-2">Action</th>
               </tr>
             </thead>
             <tbody className="max-h-[400px] overflow-y-auto">
@@ -91,14 +120,119 @@ const Inventory = () => {
                     {item.reorder_level}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    <button className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none">update</button>
+                    <button
+                      className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
+                      onClick={() => openModal(item)}
+                    >
+                      update
+                    </button>
+                    <button
+                      type="button"
+                      className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          <button
+            className="absolute bottom-6 right-32 bg-blue-500 text-white px-6 py-1 rounded"
+            onClick={() => openAddModal()}
+          >
+            Add
+          </button>
         </div>
       </div>
+
+      {/* popup form to update or delete*/}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-bold mb-4">Update Inventory</h2>
+            <form>
+              <label className="block mb-2">Item Id</label>
+              <input
+                type="text"
+                defaultValue={selectedItem?.Inventory_Id}
+                className="w-full p-2 border rounded mb-4"
+                readOnly="readonly"
+              />
+              <label className="block mb-2">Item Name</label>
+              <input
+                type="text"
+                defaultValue={selectedItem?.item_name}
+                className="w-full p-2 border rounded mb-4"
+              />
+
+              <label className="block mb-2">Quantity</label>
+              <input
+                type="number"
+                defaultValue={selectedItem?.quantity}
+                className="w-full p-2 border rounded mb-4"
+              />
+
+              <label className="block mb-2">Reorder Level</label>
+              <input
+                type="number"
+                defaultValue={selectedItem?.reorder_level}
+                className="w-full p-2 border rounded mb-4"
+              />
+
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* popup form to add */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+            <form>
+              <label className="block mb-2">Item Name</label>
+              <input type="text" className="w-full p-2 border rounded mb-4" />
+              <label className="block mb-2">Quantity</label>
+              <input type="number" className="w-full p-2 border rounded mb-4" />
+              <label className="block mb-2">Reorder Level</label>
+              <input type="number" className="w-full p-2 border rounded mb-4" />
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  onClick={closeAddModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );
