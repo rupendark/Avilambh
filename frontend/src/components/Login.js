@@ -14,13 +14,9 @@ const Login = () => {
     e.preventDefault();
     console.log("Login data:", formData);
     const url = "http://localhost:5000/auth/login";
-    console.log("before");
     const response = await axios.post(url, formData, {
       withCredentials: true, // ✅ Important: Send cookies
     });
-
-    // console.log(response.data.token);
-
     const data = response.data;
 
     if (data.token) {
@@ -29,10 +25,6 @@ const Login = () => {
     } else {
       alert("Invalid login");
     }
-
-
-    console.log("after");
-    // navigate("/landing");
 
     if (response) {
       console.log(response);

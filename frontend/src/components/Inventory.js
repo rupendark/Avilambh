@@ -104,7 +104,7 @@ const Inventory = () => {
                 <th className="px-4 py-2">Action</th>
               </tr>
             </thead>
-            <tbody className="max-h-[400px] overflow-y-auto">
+            <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
               {inventory.map((item) => (
                 <tr key={item.id} className="text-center">
                   <td className="border border-gray-300 px-4 py-2">
