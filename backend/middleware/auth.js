@@ -9,7 +9,7 @@ module.exports = {
     },
     isGuest: async function (req, res, next) {
         try {
-            console.log("+++++>>>>>",req.user,req.cookies)
+            // console.log("+++++>>>>>",req.user,req.cookies)
             const { jwtToken } = req.cookies;
             if (!jwtToken) {
                 return res.json({ status: 401, message: "Unauthorized Request..." })
@@ -18,7 +18,7 @@ module.exports = {
             let userDetails = jwt.verify(jwtToken, process.env.secret)
 
             req.user = userDetails;
-            console.log(req.user);
+            // console.log(req.user);
             next();
         } catch (err) {
             return res.status(403).json({ message: "Forbidden: Invalid or expired token" });

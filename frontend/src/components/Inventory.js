@@ -2,9 +2,10 @@ import React from "react";
 import axios from "axios";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Inventory = () => {
+  const navigate = useNavigate();
   const [inventory, setInventory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -19,6 +20,10 @@ const Inventory = () => {
   // Handle input change
   const handleChange = (e) => {
     setNewItem({ ...newItem, [e.target.name]: e.target.value });
+  };
+  //Handle input change fr update
+  const handleChange2 = (e) => {
+    setSelectedItem({ ...selectedItem, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
@@ -59,18 +64,42 @@ const Inventory = () => {
     });
   };
 
+
+//CURD operations
   const addInventory = async (e) => {
     e.preventDefault();
-    console.log(newItem);
     try {
       const response = await axios.post(
         "http://localhost:5000/inventory/addItem",
         newItem
       );
+      navigate(0);
       console.log("Data saved:", response.data);
-      window.location.reload();
     } catch (error) {
       alert("Error submitting form");
+    }
+  };
+
+  const deleteItem = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/inventory/delete/${id}`);
+      navigate(0);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  const updateItem = async (id) => {
+
+    try {
+      console.log(selectedItem);
+      await axios.put(
+        `http://localhost:5000/inventory/update/${id}`,
+        selectedItem
+      );
+      navigate(0);
+    } catch (error) {
+      console.error("Error updating item:", error);
     }
   };
 
@@ -119,7 +148,7 @@ const Inventory = () => {
         </aside>
       </div>
       <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
-        <div className="max-h-[400px] overflow-y-auto">
+        <div className="h-3/4 overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
             <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
@@ -155,6 +184,7 @@ const Inventory = () => {
                     <button
                       type="button"
                       className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                      onClick={() => deleteItem(item._id)}
                     >
                       Delete
                     </button>
@@ -188,22 +218,28 @@ const Inventory = () => {
               />
               <label className="block mb-2">Item Name</label>
               <input
+                name="item_name"
                 type="text"
                 defaultValue={selectedItem?.item_name}
+                onChange={handleChange2}
                 className="w-full p-2 border rounded mb-4"
               />
 
               <label className="block mb-2">Quantity</label>
               <input
+                name="quantity"
                 type="number"
                 defaultValue={selectedItem?.quantity}
+                onChange={handleChange2}
                 className="w-full p-2 border rounded mb-4"
               />
 
               <label className="block mb-2">Reorder Level</label>
               <input
+                name="reorder_level"
                 type="number"
                 defaultValue={selectedItem?.reorder_level}
+                onChange={handleChange2}
                 className="w-full p-2 border rounded mb-4"
               />
 
@@ -216,8 +252,9 @@ const Inventory = () => {
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  type="button"
                   className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                  onClick={() => updateItem(selectedItem._id)}
                 >
                   Save
                 </button>
