@@ -27,7 +27,7 @@ const Login = () => {
     }
 
     if (response) {
-      console.log(response);
+      console.log("Login success");
     } else {
       console.log("error");
     }

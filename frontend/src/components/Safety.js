@@ -20,7 +20,7 @@ const Saftey = () => {
         </div>
       </aside>
     </div>
-    <div className="w-[80vw] h-[85vh] fixed -z-10 top-0 right-0">SAFETY</div>
+    <div className="w-[80vw] h-[85vh] fixed  top-0 right-0">SAFETY</div>
 
     <Footer/>
     </>

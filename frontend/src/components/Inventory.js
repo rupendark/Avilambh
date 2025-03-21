@@ -10,10 +10,16 @@ const Inventory = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [newItem, setNewItem] = useState({
+    Inventory_Id: "",
     item_name: "",
     quantity: "",
     reorder_level: "",
   });
+
+  // Handle input change
+  const handleChange = (e) => {
+    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+  };
 
   useEffect(() => {
     axios
@@ -45,7 +51,27 @@ const Inventory = () => {
 
   const closeAddModal = () => {
     setIsAddModalOpen(false);
-    setNewItem({ item_name: "", quantity: "", reorder_level: "" });
+    setNewItem({
+      Inventory_Id: "INV90",
+      item_name: "",
+      quantity: "",
+      reorder_level: "",
+    });
+  };
+
+  const addInventory = async (e) => {
+    e.preventDefault();
+    console.log(newItem);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/inventory/addItem",
+        newItem
+      );
+      console.log("Data saved:", response.data);
+      window.location.reload();
+    } catch (error) {
+      alert("Error submitting form");
+    }
   };
 
   return (
@@ -207,12 +233,38 @@ const Inventory = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
+              <label className="block mb-2">Inventory</label>
+              <input
+                name="Inventory_Id"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.Inventory_Id}
+                onChange={handleChange}
+              />
               <label className="block mb-2">Item Name</label>
-              <input type="text" className="w-full p-2 border rounded mb-4" />
+              <input
+                name="item_name"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.item_name}
+                onChange={handleChange}
+              />
               <label className="block mb-2">Quantity</label>
-              <input type="number" className="w-full p-2 border rounded mb-4" />
+              <input
+                name="quantity"
+                type="number"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.quantity}
+                onChange={handleChange}
+              />
               <label className="block mb-2">Reorder Level</label>
-              <input type="number" className="w-full p-2 border rounded mb-4" />
+              <input
+                name="reorder_level"
+                type="number"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.reorder_level}
+                onChange={handleChange}
+              />
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
@@ -222,8 +274,9 @@ const Inventory = () => {
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  type="button"
                   className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  onClick={addInventory}
                 >
                   Add
                 </button>
