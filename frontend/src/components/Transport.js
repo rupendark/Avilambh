@@ -11,7 +11,6 @@ const Transport = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [newItem, setNewItem] = useState({
-    transport_id: "",
     vehicle_no: "",
     driver_name: "",
     transport_date: "",
@@ -81,7 +80,7 @@ const Transport = () => {
         newItem
       );
       navigate(0);
-      console.log("Data saved:", response.data);
+      console.log("Data saved:");
     } catch (error) {
       alert("Error submitting form");
     }
@@ -118,7 +117,7 @@ const Transport = () => {
 
   return (
     <>
-      <div className="flex h-[85vh]">
+      <div className="flex h-[90vh]">
         {/* Sidebar */}
         <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
           <div>
@@ -347,14 +346,7 @@ const Transport = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
-              <label className="block mb-2">Id</label>
-              <input
-                name="transport_id"
-                type="text"
-                className="w-full p-2 border rounded mb-4"
-                onChange={handleChange}
-                value={newItem.transport_id}
-              />
+              
               <label className="block mb-2">Driver</label>
               <input
                 name="driver_name"

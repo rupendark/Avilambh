@@ -2,14 +2,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 module.exports = {
     generateToken: function (user) {
-        return jwt.sign({ id: user._id, email: user.email }, process.env.secret, {
-            expiresIn: "1h",
+        return jwt.sign({ id: user._id, email: user.email,role : user.role, name: user.name }, process.env.secret, {
+            expiresIn: "5h",
         });
 
     },
     isGuest: async function (req, res, next) {
         try {
-            // console.log("+++++>>>>>",req.user,req.cookies)
             const { jwtToken } = req.cookies;
             if (!jwtToken) {
                 return res.json({ status: 401, message: "Unauthorized Request..." })

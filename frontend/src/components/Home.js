@@ -1,15 +1,13 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import Landingpage from "./Landingpage";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const Home = () => {
   return (
     <div>
       <>
-        <div className="flex h-[85vh]">
+        <div className="flex h-[90vh]">
           {/* Sidebar */}
           <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
             <div>

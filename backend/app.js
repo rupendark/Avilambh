@@ -5,8 +5,8 @@ const cookieParser = require("cookie-parser");
 require("./connection.js");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-
 const Inventory = require("./model/inventorySchema");
+const Counter = require("./model/counterSchema");
 const { isGuest } = require("./middleware/auth");
 const Transport = require("./model/transportSchema.js");
 const SMP = require("./model/smpSchema.js");
@@ -23,18 +23,48 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 app.use("/test", userRoutes);
 
+// Function to generate alphanumeric ID (e.g., INV1001, INV1002...)
+const getNextId = async (name) => {
+  try {
+    const counter = await Counter.findOneAndUpdate(
+      // {id:"transportId"}, // Unique ID for counter tracking
+      { id: name }, // Unique ID for counter tracking
+      { $inc: { sequence_value: 1 } },
+      { new: true, upsert: true } // Create if not exists
+    );
+    console.log("Next ID:", counter.sequence_value);
+    return counter.sequence_value;
+  } catch (error) {
+    console.error("Error generating ID:", error);
+    throw error;
+  }
+};
+
 app.get("/", (req, res) => {
   res.send("HELLo");
 });
 
+
+
+
 //INVENTORY
-app.get("/inventory", isGuest, async (req, res) => {
+app.get("/inventory", async (req, res) => {
   const items = await Inventory.find();
   res.send(items);
 });
 app.post("/inventory/addItem", async (req, res) => {
   try {
-    await Inventory.insertOne(req.body);
+    const newId = await getNextId("inventoryId");
+    const newItem = {
+      Inventory_Id: `INV${newId}`,
+      item_name: req.body.item_name,
+      quantity: req.body.quantity,
+      reorder_level: req.body.reorder_level
+    };
+    console.log(newItem)
+
+    await Inventory.insertOne(newItem);
+
     res.status(201).send({ message: "New item added" });
     console.log("Item added");
   } catch (error) {
@@ -53,10 +83,15 @@ app.delete("/inventory/delete/:id", async (req, res) => {
 app.put("/inventory/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { Inventory_id,item_name, quantity, reorder_level } = req.body;
+    const { Inventory_id, item_name, quantity, reorder_level } = req.body;
     console.log(req.body);
-    const updatedItem = await Inventory.findByIdAndUpdate(id, { Inventory_id, item_name, quantity ,reorder_level});
-    
+    const updatedItem = await Inventory.findByIdAndUpdate(id, {
+      Inventory_id,
+      item_name,
+      quantity,
+      reorder_level,
+    });
+
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
@@ -73,8 +108,21 @@ app.get("/transport", isGuest, async (req, res) => {
 });
 app.post("/transport/addItem", async (req, res) => {
   try {
-    console.log(req.body)
-    await Transport.insertOne(req.body);
+    console.log(req.body);
+    const newId = await getNextId("transportId");
+
+    const newItem = {
+      transport_id: `TID${newId}`, // Unique auto increment
+      vehicle_no: req.body.vehicle_no,
+      driver_name: req.body.driver_name,
+      transport_date: req.body.transport_date,
+      destination: req.body.destination,
+      quantity: req.body.quantity,
+      flag: "false",
+    };
+
+    await Transport.insertOne(newItem);
+
     res.status(201).send({ message: "New item added" });
     console.log("Item added");
   } catch (error) {
@@ -84,7 +132,11 @@ app.post("/transport/addItem", async (req, res) => {
 app.put("/transport/complete/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedItem = await Transport.findByIdAndUpdate(id, {$set: { flag: true }},{ new: true });
+    const updatedItem = await Transport.findByIdAndUpdate(
+      id,
+      { $set: { flag: true } },
+      { new: true }
+    );
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
@@ -104,13 +156,12 @@ app.put("/transport/update/:id", async (req, res) => {
     const { id } = req.params;
     const data = req.body;
     const updatedItem = await Transport.findByIdAndUpdate(id, data);
-    
+
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
   }
 });
-
 
 
 

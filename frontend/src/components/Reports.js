@@ -45,7 +45,7 @@ const Reports = () => {
 
   return (
     <>
-    <div className="flex h-[85vh]">
+    <div className="flex h-[90vh]">
       {/* Sidebar */}
       <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
         <div>

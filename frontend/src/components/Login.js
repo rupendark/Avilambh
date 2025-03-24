@@ -18,9 +18,10 @@ const Login = () => {
       withCredentials: true, // ✅ Important: Send cookies
     });
     const data = response.data;
+    console.log(data)
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
+    if (data) {
+      localStorage.setItem("token", data);
       navigate("/landing");
     } else {
       alert("Invalid login");

@@ -11,7 +11,6 @@ const Inventory = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [newItem, setNewItem] = useState({
-    Inventory_Id: "",
     item_name: "",
     quantity: "",
     reorder_level: "",
@@ -64,8 +63,7 @@ const Inventory = () => {
     });
   };
 
-
-//CURD operations
+  //CURD operations
   const addInventory = async (e) => {
     e.preventDefault();
     try {
@@ -90,7 +88,6 @@ const Inventory = () => {
   };
 
   const updateItem = async (id) => {
-
     try {
       console.log(selectedItem);
       await axios.put(
@@ -105,7 +102,7 @@ const Inventory = () => {
 
   return (
     <>
-      <div className="flex h-[85vh]">
+      <div className="flex h-[90vh]">
         {/* Sidebar */}
         <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
           <div>
@@ -270,14 +267,6 @@ const Inventory = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
-              <label className="block mb-2">Inventory</label>
-              <input
-                name="Inventory_Id"
-                type="text"
-                className="w-full p-2 border rounded mb-4"
-                value={newItem.Inventory_Id}
-                onChange={handleChange}
-              />
               <label className="block mb-2">Item Name</label>
               <input
                 name="item_name"
