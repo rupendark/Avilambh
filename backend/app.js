@@ -10,6 +10,7 @@ const Counter = require("./model/counterSchema");
 const { isGuest } = require("./middleware/auth");
 const Transport = require("./model/transportSchema.js");
 const SMP = require("./model/smpSchema.js");
+const Drills = require("./model/trainingSchema.js");
 
 app.use(
   cors({
@@ -73,6 +74,12 @@ app.post("/inventory/addItem", async (req, res) => {
 });
 
 
+
+//safety
+app.get("/safety", async (req, res) => {
+  const items = await Drills.find();
+  res.send(items);
+});
 
 
 
