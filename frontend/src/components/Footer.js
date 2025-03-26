@@ -7,14 +7,14 @@ const Footer = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [newItem, setNewItem] = useState({
-      name: "aa",
-      role: "bbb",
-    });
+    name: "aa",
+    role: "bbb",
+  });
   useEffect(() => {
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
-    const {role ,name} = parsedData[0]
-    console.log(role,name); // Outputs array of objects
+    const { role, name } = parsedData[0];
+    console.log(role, name); // Outputs array of objects
     setNewItem({
       name: name,
       role: role,
@@ -35,14 +35,17 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-900 py-4 px-6 h-[10vh] flex justify-between items-center">
-      {newItem.role}
-      {newItem.name}
-      <button
-        onClick={() => setShowPopup(true)}
-        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
-      >
-        Logout
-      </button>
+      <div>
+        {newItem.role}
+        {newItem.name}
+
+        <button
+          onClick={() => setShowPopup(true)}
+          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+        >
+          Logout
+        </button>
+      </div>
       <p className="text-sm text-gray-400">&copy; Avilambh2025</p>
       <p className="text-sm text-gray-300">
         <span className="font-bold">Owner:</span> Mr 979797XXXX

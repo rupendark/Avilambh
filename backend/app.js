@@ -47,6 +47,35 @@ app.get("/", (req, res) => {
 
 
 
+//SMP REPORT
+app.get("/smpReport", async (req, res) => {
+  const items = await SMP.find();
+  res.send(items);
+});
+app.post("/inventory/addItem", async (req, res) => {
+  try {
+    const newId = await getNextId("smpId");
+    const newItem = {
+      report_Id: `SMP${newId}`,
+      // item_name: req.body.item_name,
+      // quantity: req.body.quantity,
+      // reorder_level: req.body.reorder_level
+    };
+    console.log(newItem)
+
+    await smp.insertOne(newItem);
+
+    res.status(201).send({ message: "New item added" });
+    console.log("Item added");
+  } catch (error) {
+    res.status(500).send({ error: "Error" });
+  }
+});
+
+
+
+
+
 //INVENTORY
 app.get("/inventory", async (req, res) => {
   const items = await Inventory.find();
@@ -102,7 +131,7 @@ app.put("/inventory/update/:id", async (req, res) => {
 
 
 //TRANSPORT
-app.get("/transport", isGuest, async (req, res) => {
+app.get("/transport", async (req, res) => {
   const items = await Transport.find();
   res.send(items);
 });

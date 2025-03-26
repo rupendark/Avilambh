@@ -30,7 +30,7 @@ const Transport = () => {
   useEffect(() => {
     axios
       .get("http://localhost:5000/transport", {
-        withCredentials: true, // ✅ Important: Send cookies
+        // withCredentials: true, // ✅ Important: Send cookies
       }) // Update if deployed
       .then((response) => {
         setTransport(response.data);
