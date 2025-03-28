@@ -11,6 +11,7 @@ const { isGuest } = require("./middleware/auth");
 const Transport = require("./model/transportSchema.js");
 const SMP = require("./model/smpSchema.js");
 const Drills = require("./model/trainingSchema.js");
+const Jobs = require("./model/jobSchema.js");
 
 app.use(
   cors({
@@ -45,8 +46,59 @@ app.get("/", (req, res) => {
   res.send("HELLo");
 });
 
+//JOB SCHEDULING
+app.get("/jobs", async (req, res) => {
+  const items = await Jobs.find();
+  res.send(items);
+});
+app.post("/jobs/addItem", async (req, res) => {
+  try {
+    const newId = await getNextId("jobId");
+    const newItem = {
+      job_id: `JB${newId}`,
+      smp_id: req.body.smp_id,
+      batch: req.body.batch,
+      task: req.body.task,
+      start_time: req.body.start_time,
+      end_time: req.body.end_time,
+    };
+    console.log(newItem);
 
+    await Jobs.insertOne(newItem);
 
+    res.status(201).send({ message: "New item added" });
+    console.log("Item added");
+  } catch (error) {
+    res.status(500).send({ error: "Error" });
+  }
+});
+app.delete("/jobs/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Jobs.findByIdAndDelete(id);
+    res.json({ message: "Item deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting item" });
+  }
+});
+app.put("/jobs/update/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { smp_id, start_time, end_time, batch, task } = req.body;
+    console.log(req.body);
+    const updatedItem = await Jobs.findByIdAndUpdate(id, {
+      smp_id,
+      start_time,
+      end_time,
+      batch,
+      task,
+    });
+
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating item" });
+  }
+});
 
 //SMP REPORT
 app.get("/smpReport", async (req, res) => {
@@ -62,9 +114,9 @@ app.post("/inventory/addItem", async (req, res) => {
       // quantity: req.body.quantity,
       // reorder_level: req.body.reorder_level
     };
-    console.log(newItem)
+    console.log(newItem);
 
-    await smp.insertOne(newItem);
+    await SMP.insertOne(newItem);
 
     res.status(201).send({ message: "New item added" });
     console.log("Item added");
@@ -73,15 +125,33 @@ app.post("/inventory/addItem", async (req, res) => {
   }
 });
 
-
-
 //safety
 app.get("/safety", async (req, res) => {
   const items = await Drills.find();
   res.send(items);
 });
+app.post("/safety/addItem", async (req, res) => {
+  try {
+    const newId = await getNextId("drillId");
+    const newItem = {
+      drill_id: `DRL${newId}`,
+      mine_id: req.body.mine_id,
+      training_type: req.body.training_type,
+      scheduled_date: req.body.scheduled_date,
+      issue_detected: req.body.issue_detected,
+      potential_danger: req.body.potential_danger,
+      incharge: req.body.incharge,
+    };
+    console.log(newItem);
 
+    await Drills.insertOne(newItem);
 
+    res.status(201).send({ message: "New item added" });
+    console.log("Item added");
+  } catch (error) {
+    res.status(500).send({ error: "Error" });
+  }
+});
 
 //INVENTORY
 app.get("/inventory", async (req, res) => {
@@ -95,9 +165,9 @@ app.post("/inventory/addItem", async (req, res) => {
       Inventory_Id: `INV${newId}`,
       item_name: req.body.item_name,
       quantity: req.body.quantity,
-      reorder_level: req.body.reorder_level
+      reorder_level: req.body.reorder_level,
     };
-    console.log(newItem)
+    console.log(newItem);
 
     await Inventory.insertOne(newItem);
 
@@ -133,9 +203,6 @@ app.put("/inventory/update/:id", async (req, res) => {
     res.status(500).json({ error: "Error updating item" });
   }
 });
-
-
-
 
 //TRANSPORT
 app.get("/transport", async (req, res) => {
@@ -199,10 +266,6 @@ app.put("/transport/update/:id", async (req, res) => {
   }
 });
 
-
-
-
-
 //REPORTS
 app.get("/reports", isGuest, async (req, res) => {
   const items = await SMP.find();
@@ -217,10 +280,6 @@ app.post("/reports/addItem", async (req, res) => {
     res.status(500).send({ error: "Error saving report" });
   }
 });
-
-
-
-
 
 //START SERVER
 app.listen(5000, () => {

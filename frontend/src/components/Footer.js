@@ -35,10 +35,14 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-900 py-4 px-6 h-[10vh] flex justify-between items-center">
-      <div>
-        {newItem.role}
-        {newItem.name}
+      <div className="flex justify-between items-center space-x-12">
+        {/* Left Section: Name & Role in Two Rows */}
+        <div className="flex flex-col">
+          <span className="text-white text-xl">{newItem.name}</span>
+          <span className="text-gray-400 text-lg">{newItem.role}</span>
+        </div>
 
+        {/* Right Section: Logout Button */}
         <button
           onClick={() => setShowPopup(true)}
           className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"

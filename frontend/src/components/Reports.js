@@ -14,7 +14,7 @@ const Reports = () => {
   //   "Repair or replace dust control system",
   //   "Schedule periodic maintenance"
   // ];
-  const [smp,setSmp]=useState([]);
+  const [smp, setSmp] = useState([]);
   const [formData, setFormData] = useState({
     report_id: "",
     mine_id: "",
@@ -75,6 +75,9 @@ const Reports = () => {
               >
                 HOME
               </Link>
+              <Link to="/Jobs" className="block text-gray-300 hover:text-white">
+                JOB SCHEDULE
+              </Link>
               <Link
                 to="/reports"
                 className="block text-gray-300 hover:text-white underline"
@@ -107,7 +110,6 @@ const Reports = () => {
       <div className="w-[80vw] h-[85vh] fixed  top-0 right-0">
         <h2>SMP REPORT</h2>
 
-
         <div className="h-3/4 overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
             <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
@@ -128,7 +130,7 @@ const Reports = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {item.status}
                   </td>
-                 
+
                   <td className="border border-gray-300 px-4 py-2">
                     {item.date.slice(0, 10)}
                   </td>
@@ -136,16 +138,12 @@ const Reports = () => {
                     {item.inspected_by}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
-                     
-                    >
+                    <button className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none">
                       update
                     </button>
                     <button
                       type="button"
                       className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
-                      
                     >
                       Delete
                     </button>
@@ -155,34 +153,13 @@ const Reports = () => {
             </tbody>
           </table>
 
-          <button
-            className="absolute bottom-6 right-32 bg-blue-500 text-white px-6 py-1 rounded"
-            
-          >
+          <button className="absolute bottom-6 right-32 bg-blue-500 text-white px-6 py-1 rounded">
             Add
           </button>
         </div>
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* Report Form
+      {/* Report Form
         <div className="max-w-2xl mx-auto bg-gray-300 p-6 rounded-lg shadow-md">
           <form onSubmit={handleSubmit} className="space-y-4">
             
@@ -264,7 +241,7 @@ const Reports = () => {
           </form> 
         </div> */}
 
-        {/* <div className="w-2/3 mx-auto mt-10 p-6 bg-gray-100 shadow-lg rounded-xl">
+      {/* <div className="w-2/3 mx-auto mt-10 p-6 bg-gray-100 shadow-lg rounded-xl">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Recommendations</h2>
               <div className="max-h-60 overflow-y-auto">
                   <ul className="list-disc list-inside text-gray-700">

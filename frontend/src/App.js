@@ -8,6 +8,7 @@ import Reports from "./components/Reports";
 import Home from "./components/Home";
 import Safety from "./components/Safety";
 import Login from "./components/Login";
+import Jobscheduler from "./components/Jobscheduler";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/landing" element={<PrivateRoute><Landingpage/></PrivateRoute>}/>
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/jobs" element={<PrivateRoute><Jobscheduler /></PrivateRoute>} />
         <Route path="/inventory" element={<PrivateRoute><Inventory /></PrivateRoute>} />
         <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
         <Route path="/production" element={<PrivateRoute><Production /></PrivateRoute>} />

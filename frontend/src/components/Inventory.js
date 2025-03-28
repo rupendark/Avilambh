@@ -116,6 +116,9 @@ const Inventory = () => {
               >
                 HOME
               </Link>
+              <Link to="/Jobs" className="block text-gray-300 hover:text-white">
+                JOB SCHEDULE
+              </Link>
               <Link
                 to="/reports"
                 className="block text-gray-300 hover:text-white"

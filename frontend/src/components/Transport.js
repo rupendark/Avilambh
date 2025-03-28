@@ -75,10 +75,7 @@ const Transport = () => {
     e.preventDefault();
     console.log(newItem);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/transport/addItem",
-        newItem
-      );
+      await axios.post("http://localhost:5000/transport/addItem", newItem);
       navigate(0);
       console.log("Data saved:");
     } catch (error) {
@@ -130,6 +127,9 @@ const Transport = () => {
                 className="block text-gray-300 hover:text-white "
               >
                 HOME
+              </Link>
+              <Link to="/Jobs" className="block text-gray-300 hover:text-white">
+                JOB SCHEDULE
               </Link>
               <Link
                 to="/reports"
@@ -346,7 +346,6 @@ const Transport = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
-              
               <label className="block mb-2">Driver</label>
               <input
                 name="driver_name"
