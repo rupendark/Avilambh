@@ -138,7 +138,6 @@ const Saftey = () => {
         <div className="p-4 bg-gray-200">
           <div
             className="p-4 w-5/6 h-[75vh]  bg-gray-500 mx-auto"
-            classDate="p-4"
           >
             <h1 className="text-white text-xl">Safety drills/trainings</h1>
             <div className="h-4/5 overflow-y-auto scrollbar-hide">
@@ -154,7 +153,7 @@ const Saftey = () => {
                 </thead>
                 <tbody>
                   {drills.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-100 text-center">
+                    <tr key={item.drill_id} className="hover:bg-gray-100 text-center">
                       <td className="border p-2">{item.drill_id}</td>
                       <td className="border p-2">{item.training_type}</td>
                       <td className="border p-2">

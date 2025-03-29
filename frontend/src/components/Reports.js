@@ -110,7 +110,7 @@ const Reports = () => {
       <div className="w-[80vw] h-[85vh] fixed  top-0 right-0">
         <h2>SMP REPORT</h2>
 
-        <div className="h-3/4 overflow-y-auto">
+        <div className="h-3/4 overflow-y-auto scrollbar-hide">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
             <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
@@ -121,9 +121,9 @@ const Reports = () => {
                 <th className="px-4 py-2">action</th>
               </tr>
             </thead>
-            <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
+            <tbody className="max-h-[400px] overflow-y-auto ">
               {smp.map((item) => (
-                <tr key={item.id} className="text-center">
+                <tr key={item.report_id} className="text-center">
                   <td className="border border-gray-300 px-4 py-2">
                     {item.report_id}
                   </td>

@@ -39,8 +39,6 @@ const Jobscheduler = () => {
     id: job.job_id,
     task: job.task,
     title: job.task,
-    // start: new Date(job.start_time.slice(0, 16)),
-    // end: new Date(job.end_time.slice(0, 16)),
     start: new Date(job.start_time),
     end: new Date(job.end_time),
     batch: job.batch,
@@ -83,12 +81,6 @@ const Jobscheduler = () => {
     setIsModalOpen(true); // Open modal after setting data
   };
 
-  //popup form functions
-  // const openModal = (item) => {
-  //   setSelectedItem(item);
-  //   setIsModalOpen(true);
-  // };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
@@ -113,11 +105,9 @@ const Jobscheduler = () => {
   //   CURD operations
   const addJob = async (e) => {
     e.preventDefault();
-
     try {
       await axios.post("http://localhost:5000/jobs/addItem", newItem);
       navigate(0);
-      console.log("Data saved:");
     } catch (error) {
       alert("Error submitting form");
     }
@@ -139,6 +129,7 @@ const Jobscheduler = () => {
       console.error("Error updating item:", error);
     }
   };
+
   const now = new Date();
   const jobStartTime = selectedItem ? new Date(selectedItem.start_time) : null;
   const isPastJob = jobStartTime && jobStartTime < now;
@@ -202,21 +193,26 @@ const Jobscheduler = () => {
             startAccessor="start"
             endAccessor="end"
             style={{ height: "100%" }}
-            eventPropGetter={getEventStyle} // Custom event colors
-            defaultView={Views.WEEK} // Set default view to week
-            views={["month", "week", "day"]} // Enable multiple views
+            eventPropGetter={getEventStyle}
+            defaultView={Views.WEEK}
+            views={["month", "week", "day"]}
             step={180}
-            timeslots={1} // Show one slot per step (no subdivisions)
+            timeslots={1}
             showMultiDayTimes={true}
             toolbar={true}
             date={date}
-            onNavigate={(newDate) => setDate(newDate)} // Fix navigation
+            onNavigate={(newDate) => setDate(newDate)}
             dayLayoutAlgorithm={"no-overlap"}
-            onSelectEvent={handleSelectEvent} // Handle job click
+            onSelectEvent={handleSelectEvent}
           />
         </div>
 
-        <button className="absolute bottom-0 right-16 bg-blue-500 text-white px-6 py-1 rounded" onClick={openAddModal}>ADD</button>
+        <button
+          className="absolute bottom-0 right-16 bg-blue-500 text-white px-6 py-1 rounded"
+          onClick={openAddModal}
+        >
+          ADD
+        </button>
       </div>
 
       {/* popup form to update or delete*/}

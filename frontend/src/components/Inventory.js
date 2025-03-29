@@ -67,12 +67,8 @@ const Inventory = () => {
   const addInventory = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5000/inventory/addItem",
-        newItem
-      );
+      await axios.post("http://localhost:5000/inventory/addItem", newItem);
       navigate(0);
-      console.log("Data saved:", response.data);
     } catch (error) {
       alert("Error submitting form");
     }
@@ -148,7 +144,7 @@ const Inventory = () => {
         </aside>
       </div>
       <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
-        <div className="h-3/4 overflow-y-auto">
+        <div className="h-3/4 overflow-y-auto scrollbar-hide">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
             <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
@@ -161,7 +157,7 @@ const Inventory = () => {
             </thead>
             <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
               {inventory.map((item) => (
-                <tr key={item.id} className="text-center">
+                <tr key={item.Inventory_Id} className="text-center">
                   <td className="border border-gray-300 px-4 py-2">
                     {item.Inventory_Id}
                   </td>

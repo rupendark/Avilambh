@@ -178,7 +178,7 @@ const Transport = () => {
               </thead>
               <tbody className="max-h-4/5 text-white text-sm">
                 {completedTransport.map((item) => (
-                  <tr key={item.id} className="text-center">
+                  <tr key={item.transport_id} className="text-center">
                     <td className="pl-2">{item.transport_id}</td>
                     <td className="pl-2">{item.driver_name}</td>
                     <td className="pl-2">{item.vehicle_no}</td>
@@ -197,7 +197,7 @@ const Transport = () => {
         </div>
 
         {/* scheduled transport */}
-        <div className="w-5/6 h-48 bg-gray-900 mx-auto my-6">
+        <div className="w-5/6 h-[40vh] bg-gray-900 mx-auto my-6">
           <span className="text-white">Schedule Transport</span>
           <div className="h-4/5 overflow-y-auto scrollbar-hide">
             <table className="w-full mx-aut shadow-md">
@@ -214,7 +214,7 @@ const Transport = () => {
               </thead>
               <tbody className="max-h-4/5 text-white text-sm">
                 {inCompletedTransport.map((item) => (
-                  <tr key={item.id} className="text-center">
+                  <tr key={item.transport_id} className="text-center">
                     <td className="pl-2">{item.transport_id}</td>
                     <td className="pl-2">{item.driver_name}</td>
                     <td className="pl-2">{item.vehicle_no}</td>

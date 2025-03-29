@@ -33,7 +33,6 @@ const getNextId = async (name) => {
       { $inc: { sequence_value: 1 } },
       { new: true, upsert: true } // Create if not exists
     );
-    console.log("Next ID:", counter.sequence_value);
     return counter.sequence_value;
   } catch (error) {
     console.error("Error generating ID:", error);
@@ -61,10 +60,7 @@ app.post("/jobs/addItem", async (req, res) => {
       start_time: req.body.start_time,
       end_time: req.body.end_time,
     };
-    console.log(newItem);
-
     await Jobs.insertOne(newItem);
-
     res.status(201).send({ message: "New item added" });
     console.log("Item added");
   } catch (error) {
@@ -74,9 +70,7 @@ app.post("/jobs/addItem", async (req, res) => {
 app.delete("/jobs/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    // await Jobs.findByIdAndDelete(id);
     await Jobs.deleteOne({ job_id: id });
-
     res.json({ message: "Item deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Error deleting item" });
@@ -98,7 +92,6 @@ app.put("/jobs/update/:id", async (req, res) => {
         },
       }
     );
-
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
@@ -144,12 +137,8 @@ app.post("/safety/addItem", async (req, res) => {
       scheduled_date: req.body.scheduled_date,
       incharge: req.body.incharge,
     };
-    console.log(newItem);
-
     await Drills.insertOne(newItem);
-
     res.status(201).send({ message: "New item added" });
-    console.log("Item added");
   } catch (error) {
     res.status(500).send({ error: "Error" });
   }
@@ -180,12 +169,8 @@ app.post("/inventory/addItem", async (req, res) => {
       quantity: req.body.quantity,
       reorder_level: req.body.reorder_level,
     };
-    console.log(newItem);
-
     await Inventory.insertOne(newItem);
-
     res.status(201).send({ message: "New item added" });
-    console.log("Item added");
   } catch (error) {
     res.status(500).send({ error: "Error" });
   }
@@ -217,6 +202,7 @@ app.put("/inventory/update/:id", async (req, res) => {
   }
 });
 
+
 //TRANSPORT
 app.get("/transport", async (req, res) => {
   const items = await Transport.find();
@@ -240,7 +226,6 @@ app.post("/transport/addItem", async (req, res) => {
     await Transport.insertOne(newItem);
 
     res.status(201).send({ message: "New item added" });
-    console.log("Item added");
   } catch (error) {
     res.status(500).send({ error: "Error" });
   }
@@ -279,6 +264,7 @@ app.put("/transport/update/:id", async (req, res) => {
   }
 });
 
+
 //REPORTS
 app.get("/reports", isGuest, async (req, res) => {
   const items = await SMP.find();
@@ -293,6 +279,7 @@ app.post("/reports/addItem", async (req, res) => {
     res.status(500).send({ error: "Error saving report" });
   }
 });
+
 
 //START SERVER
 app.listen(5000, () => {
