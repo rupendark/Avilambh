@@ -150,7 +150,7 @@ const Inventory = () => {
       <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
         <div className="h-3/4 overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
-            <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
+            <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
                 <th className="px-4 py-2">ID</th>
                 <th className="px-4 py-2">Name</th>

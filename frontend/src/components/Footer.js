@@ -7,14 +7,13 @@ const Footer = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [newItem, setNewItem] = useState({
-    name: "aa",
-    role: "bbb",
+    name: "",
+    role: "",
   });
   useEffect(() => {
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
     const { role, name } = parsedData[0];
-    console.log(role, name); // Outputs array of objects
     setNewItem({
       name: name,
       role: role,

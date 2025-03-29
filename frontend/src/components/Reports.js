@@ -112,7 +112,7 @@ const Reports = () => {
 
         <div className="h-3/4 overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
-            <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
+            <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
                 <th className="px-4 py-2">report_id</th>
                 <th className="px-4 py-2">status</th>

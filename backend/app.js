@@ -29,7 +29,6 @@ app.use("/test", userRoutes);
 const getNextId = async (name) => {
   try {
     const counter = await Counter.findOneAndUpdate(
-      // {id:"transportId"}, // Unique ID for counter tracking
       { id: name }, // Unique ID for counter tracking
       { $inc: { sequence_value: 1 } },
       { new: true, upsert: true } // Create if not exists
@@ -111,7 +110,7 @@ app.get("/smpReport", async (req, res) => {
   const items = await SMP.find();
   res.send(items);
 });
-app.post("/inventory/addItem", async (req, res) => {
+app.post("/smpReport/addItem", async (req, res) => {
   try {
     const newId = await getNextId("smpId");
     const newItem = {
