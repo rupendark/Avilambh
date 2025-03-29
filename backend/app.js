@@ -75,7 +75,9 @@ app.post("/jobs/addItem", async (req, res) => {
 app.delete("/jobs/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await Jobs.findByIdAndDelete(id);
+    // await Jobs.findByIdAndDelete(id);
+    await Jobs.deleteOne({ job_id: id });
+
     res.json({ message: "Item deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Error deleting item" });
@@ -85,14 +87,18 @@ app.put("/jobs/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { smp_id, start_time, end_time, batch, task } = req.body;
-    console.log(req.body);
-    const updatedItem = await Jobs.findByIdAndUpdate(id, {
-      smp_id,
-      start_time,
-      end_time,
-      batch,
-      task,
-    });
+    const updatedItem = await Jobs.updateOne(
+      { job_id: id },
+      {
+        $set: {
+          smp_id: smp_id,
+          start_time: start_time,
+          end_time: end_time,
+          batch: batch,
+          task: task,
+        },
+      }
+    );
 
     res.json(updatedItem);
   } catch (error) {
@@ -135,11 +141,8 @@ app.post("/safety/addItem", async (req, res) => {
     const newId = await getNextId("drillId");
     const newItem = {
       drill_id: `DRL${newId}`,
-      mine_id: req.body.mine_id,
       training_type: req.body.training_type,
       scheduled_date: req.body.scheduled_date,
-      issue_detected: req.body.issue_detected,
-      potential_danger: req.body.potential_danger,
       incharge: req.body.incharge,
     };
     console.log(newItem);
@@ -150,6 +153,17 @@ app.post("/safety/addItem", async (req, res) => {
     console.log("Item added");
   } catch (error) {
     res.status(500).send({ error: "Error" });
+  }
+});
+app.put("/safety/update/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+    const updatedItem = await Drills.findByIdAndUpdate(id, data);
+
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating item" });
   }
 });
 

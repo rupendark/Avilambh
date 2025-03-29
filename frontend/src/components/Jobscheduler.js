@@ -3,6 +3,11 @@ import axios from "axios";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Calendar, momentLocalizer, Views } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+const localizer = momentLocalizer(moment);
 
 const Jobscheduler = () => {
   const navigate = useNavigate();
@@ -17,14 +22,7 @@ const Jobscheduler = () => {
     end_time: "",
     smp_id: "",
   });
-  // Handle input change fr add
-  const handleChange = (e) => {
-    setNewItem({ ...newItem, [e.target.name]: e.target.value });
-  };
-  //Handle input change fr update
-  const handleChange2 = (e) => {
-    setSelectedItem({ ...selectedItem, [e.target.name]: e.target.value });
-  };
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     axios
@@ -37,12 +35,59 @@ const Jobscheduler = () => {
       });
   }, []);
 
-  //popup form functions
-  const openModal = (item) => {
-    setSelectedItem(jobs[0]);
-    console.log(jobs[0]);
-    setIsModalOpen(true);
+  const events = jobs.map((job) => ({
+    id: job.job_id,
+    task: job.task,
+    title: job.task,
+    // start: new Date(job.start_time.slice(0, 16)),
+    // end: new Date(job.end_time.slice(0, 16)),
+    start: new Date(job.start_time),
+    end: new Date(job.end_time),
+    batch: job.batch,
+    smp_id: job.smp_id,
+  }));
+  const getEventStyle = (event) => {
+    const batchColors = {
+      1: "#f6c23e", // Yellow
+      2: "#1cc88a", // Green
+      3: "#36b9cc", // Blue
+    };
+    return {
+      style: {
+        backgroundColor: batchColors[event.batch] || "#4e73df", // Default Blue
+        color: "#fff",
+        borderRadius: "5px",
+        padding: "5px",
+      },
+    };
   };
+
+  // Handle input change fr add
+  const handleChange = (e) => {
+    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+  };
+  //Handle input change fr update
+  const handleChange2 = (e) => {
+    setSelectedItem({ ...selectedItem, [e.target.name]: e.target.value });
+  };
+  //popup form functions
+  const handleSelectEvent = (event) => {
+    setSelectedItem({
+      id: event.id,
+      task: event.task,
+      batch: event.batch,
+      start_time: moment(event.start).format("YYYY-MM-DDTHH:mm"), // Ensure proper format
+      end_time: moment(event.end).format("YYYY-MM-DDTHH:mm"),
+      smp_id: event.smp_id, // Add missing fields
+    });
+    setIsModalOpen(true); // Open modal after setting data
+  };
+
+  //popup form functions
+  // const openModal = (item) => {
+  //   setSelectedItem(item);
+  //   setIsModalOpen(true);
+  // };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -68,7 +113,7 @@ const Jobscheduler = () => {
   //   CURD operations
   const addJob = async (e) => {
     e.preventDefault();
-    console.log(newItem);
+
     try {
       await axios.post("http://localhost:5000/jobs/addItem", newItem);
       navigate(0);
@@ -77,7 +122,6 @@ const Jobscheduler = () => {
       alert("Error submitting form");
     }
   };
-
   const deleteJob = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/jobs/delete/${id}`);
@@ -95,6 +139,9 @@ const Jobscheduler = () => {
       console.error("Error updating item:", error);
     }
   };
+  const now = new Date();
+  const jobStartTime = selectedItem ? new Date(selectedItem.start_time) : null;
+  const isPastJob = jobStartTime && jobStartTime < now;
 
   return (
     <>
@@ -148,11 +195,29 @@ const Jobscheduler = () => {
       </div>
 
       <div className="w-[80vw] h-[85vh] fixed top-0 right-0">
-        <button onClick={openModal}>UPDATE</button>
-        <button onClick={openAddModal}>ADD</button>
+        <div style={{ height: "80vh", padding: "20px" }}>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: "100%" }}
+            eventPropGetter={getEventStyle} // Custom event colors
+            defaultView={Views.WEEK} // Set default view to week
+            views={["month", "week", "day"]} // Enable multiple views
+            step={180}
+            timeslots={1} // Show one slot per step (no subdivisions)
+            showMultiDayTimes={true}
+            toolbar={true}
+            date={date}
+            onNavigate={(newDate) => setDate(newDate)} // Fix navigation
+            dayLayoutAlgorithm={"no-overlap"}
+            onSelectEvent={handleSelectEvent} // Handle job click
+          />
+        </div>
+
+        <button className="absolute bottom-0 right-16 bg-blue-500 text-white px-6 py-1 rounded" onClick={openAddModal}>ADD</button>
       </div>
-
-
 
       {/* popup form to update or delete*/}
       {isModalOpen && (
@@ -164,7 +229,7 @@ const Jobscheduler = () => {
               <input
                 name="job_id"
                 type="text"
-                defaultValue={selectedItem?.job_id}
+                defaultValue={selectedItem?.id}
                 className="w-full p-2 border rounded mb-4"
                 readOnly="readonly"
               />
@@ -191,7 +256,8 @@ const Jobscheduler = () => {
                 name="start_time"
                 type="datetime-local"
                 onChange={handleChange2}
-                defaultValue={selectedItem?.start_time.slice(0,16)}
+                min={new Date().toISOString().slice(0, 16)}
+                value={selectedItem?.start_time}
                 className="w-full p-2 border rounded mb-4"
               />
               <label className="block mb-2">EndTime</label>
@@ -199,7 +265,8 @@ const Jobscheduler = () => {
                 name="end_time"
                 type="datetime-local"
                 onChange={handleChange2}
-                defaultValue={selectedItem?.end_time.slice(0,16)}
+                min={selectedItem.start_time}
+                value={selectedItem?.end_time}
                 className="w-full p-2 border rounded mb-4"
               />
               <label className="block mb-2">Task</label>
@@ -219,13 +286,24 @@ const Jobscheduler = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 rounded-md text-white"
-                  onClick={() => updateJob(selectedItem._id)}
-                >
-                  Save
-                </button>
+                {!isPastJob && (
+                  <>
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-red-600 rounded-md text-white"
+                      onClick={() => deleteJob(selectedItem.id)}
+                    >
+                      delete
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                      onClick={() => updateJob(selectedItem.id)}
+                    >
+                      Save
+                    </button>
+                  </>
+                )}
               </div>
             </form>
           </div>
@@ -252,6 +330,7 @@ const Jobscheduler = () => {
                 type="datetime-local"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
+                min={new Date().toISOString().slice(0, 16)}
                 value={newItem.start_time}
               />
               <label className="block mb-2">end time</label>
@@ -260,6 +339,7 @@ const Jobscheduler = () => {
                 type="datetime-local"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
+                min={newItem.start_time}
                 value={newItem.end_time}
               />
               <label className="block mb-2">batch</label>

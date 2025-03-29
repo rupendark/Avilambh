@@ -57,19 +57,28 @@ const Saftey = () => {
   const closeAddModal = () => {
     setIsAddModalOpen(false);
     setNewItem({
-      mine_id: "",
       training_type: "",
       scheduled_date: "",
-      issue_detected: "",
-      potential_danger: "",
       incharge: "",
     });
+  };
+
+  const addDrills = async (e) => {
+    e.preventDefault();
+    console.log(newItem);
+    try {
+      await axios.post("http://localhost:5000/safety/addItem", newItem);
+      navigate(0);
+      console.log("Data saved:");
+    } catch (error) {
+      alert("Error submitting form");
+    }
   };
   const updateDrills = async (id) => {
     try {
       console.log(selectedItem);
       await axios.put(
-        `http://localhost:5000/transport/update/${id}`,
+        `http://localhost:5000/safety/update/${id}`,
         selectedItem
       );
       navigate(0);
@@ -131,7 +140,7 @@ const Saftey = () => {
             className="p-4 w-5/6 h-[75vh]  bg-gray-500 mx-auto"
             classDate="p-4"
           >
-            <h1 className="text-white text-xl">Production Record</h1>
+            <h1 className="text-white text-xl">Safety drills/trainings</h1>
             <div className="h-4/5 overflow-y-auto scrollbar-hide">
               <table className=" p-3 min-w-full bg-white">
                 <thead className="bg-gray-400">
@@ -139,6 +148,7 @@ const Saftey = () => {
                     <th className="text-white border p-2">Drill_ID</th>
                     <th className="text-white border p-2">training_type</th>
                     <th className="text-white border p-2">Scheduled Date</th>
+                    <th className="text-white border p-2">Incharge</th>
                     <th className="text-white border p-2">Action</th>
                   </tr>
                 </thead>
@@ -150,9 +160,20 @@ const Saftey = () => {
                       <td className="border p-2">
                         {item.scheduled_date.slice(0, 10)}
                       </td>
-                      <td className="border p-2 ">
-                        <button className="px-4 py-1 bg-red-500 rounded-md text-white outline-none ">
-                          view
+                      <td className="border p-2">{item.incharge}</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
+                          onClick={() => openModal(item)}
+                        >
+                          update
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                          // onClick={() => deleteItem(item._id)}
+                        >
+                          Delete
                         </button>
                       </td>
                     </tr>
@@ -162,12 +183,6 @@ const Saftey = () => {
             </div>
           </div>
           <div className="flex space-x-4 justify-end p-4">
-            <button
-              type="button"
-              className="px-6 py-2 bg-gray-800 text-white rounded-lg "
-            >
-              Update
-            </button>
             <button
               type="button"
               className="px-6 py-2 bg-gray-800 text-white rounded-lg "
@@ -185,20 +200,36 @@ const Saftey = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 h-2/4  overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">Update Drill</h2>
             <form>
-              <label className="block mb-2">Transport_id</label>
+              <label className="block mb-2">Drill_id</label>
               <input
-                name="transport_id"
+                name="drill_id"
                 type="text"
-                defaultValue={selectedItem?.transport_id}
+                defaultValue={selectedItem?.drill_id}
                 className="w-full p-2 border rounded mb-4"
                 readOnly="readonly"
               />
-              <label className="block mb-2">Vehicle</label>
+              <label className="block mb-2">Type</label>
               <input
-                name="vehicle_no"
+                name="training_type"
                 type="text"
                 onChange={handleChange2}
-                defaultValue={selectedItem?.vehicle_no}
+                defaultValue={selectedItem?.training_type}
+                className="w-full p-2 border rounded mb-4"
+              />
+              <label className="block mb-2">Date</label>
+              <input
+                name="scheduled_date"
+                type="date"
+                onChange={handleChange2}
+                defaultValue={selectedItem?.scheduled_date.slice(0,10)}
+                className="w-full p-2 border rounded mb-4"
+              />
+              <label className="block mb-2">Incharge</label>
+              <input
+                name="incharge"
+                type="text"
+                onChange={handleChange2}
+                defaultValue={selectedItem?.incharge}
                 className="w-full p-2 border rounded mb-4"
               />
               <div className="flex justify-end space-x-2">
@@ -228,13 +259,29 @@ const Saftey = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
-              <label className="block mb-2">Driver</label>
+              <label className="block mb-2">Type</label>
               <input
-                name="driver_name"
+                name="training_type"
                 type="text"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
-                value={newItem.driver_name}
+                value={newItem.training_type}
+              />
+              <label className="block mb-2">Date</label>
+              <input
+                name="scheduled_date"
+                type="date"
+                className="w-full p-2 border rounded mb-4"
+                onChange={handleChange}
+                value={newItem.scheduled_date}
+              />
+              <label className="block mb-2">Incharge</label>
+              <input
+                name="incharge"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                onChange={handleChange}
+                value={newItem.incharge}
               />
 
               <div className="flex justify-end space-x-2">
@@ -248,7 +295,7 @@ const Saftey = () => {
                 <button
                   type="submit"
                   className="px-4 py-2 bg-green-600 rounded-md text-white"
-                  // onClick={addTransport}
+                  onClick={addDrills}
                 >
                   Add
                 </button>

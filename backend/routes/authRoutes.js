@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
     res.cookie("jwtToken", userdata, {
       httpOnly: false,
       secure: false, // Set to `true` in production with HTTPS
-      maxAge: 3600000,
+      maxAge: 5*3600000,
       sameSite: "Strict",
     });
 
