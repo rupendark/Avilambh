@@ -3,19 +3,14 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Reports = () => {
-  // const recommendations = [
-  //   "Reinforce tunnel support with additional beams",
-  //   "Schedule maintenance for ventilation system",
-  //   "Inspect and secure all loose wiring",
-  //   "Continue regular safety inspections",
-  //   "Clear emergency exits and enforce regulations",
-  //   "Repair or replace dust control system",
-  //   "Schedule periodic maintenance"
-  // ];
+  const navigate = useNavigate();
   const [smp, setSmp] = useState([]);
-  const [formData, setFormData] = useState({
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [reportData, setReportData] = useState({
     report_id: "",
     mine_id: "",
     status: "",
@@ -24,6 +19,22 @@ const Reports = () => {
     inspected_by: "",
     recommendations: "",
   });
+  const [newItem, setNewItem] = useState({
+    report_id: "",
+    mine_id: "",
+    status: "",
+    date: "",
+    inspected_by: "",
+  });
+
+  // Handle SMP View
+  //  const handleView = (e) => {
+  //   setNewItem({ ...newItem, [e.target.name]: e.target.value });
+
+  //Handle input change fr update
+  const handleUpdate = (e) => {
+    setReportData({ ...reportData, [e.target.name]: e.target.value });
+  };
 
   useEffect(() => {
     axios
@@ -39,23 +50,73 @@ const Reports = () => {
   }, []);
 
   // Handle input change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(formData);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log(formData);
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:5000/reports/addItem",
+  //       formData
+  //     );
+  //     console.log("Data saved:", response.data);
+  //     alert("Form submitted successfully!");
+  //   } catch (error) {
+  //     alert("Error submitting form");
+  //   }
+  // };
+
+  //popup form functions
+  const openModal = (item) => {
+    setReportData(item);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setReportData(null);
+  };
+
+  // popup view smp functions
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+    setNewItem({
+      report_id: "",
+      mine_id: "",
+      status: "",
+      date: "",
+      inspected_by: "",
+    });
+  };
+
+  // CURD Operations
+  const updateItem = async (id) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/reports/addItem",
-        formData
+      console.log(reportData);
+      await axios.put(
+        `http://localhost:5000/smpReport/update/${id}`,
+        reportData
       );
-      console.log("Data saved:", response.data);
-      alert("Form submitted successfully!");
+      navigate(0);
     } catch (error) {
-      alert("Error submitting form");
+      console.error("Error updating item:", error);
+    }
+  };
+
+  const deleteItem = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/smpReport/delete/${id}`);
+      navigate(0);
+    } catch (error) {
+      console.error("Error deleting item:", error);
     }
   };
 
@@ -102,30 +163,39 @@ const Reports = () => {
               >
                 INVENTORY
               </Link>
+              <Link
+                to="/production"
+                className="block text-gray-300 hover:text-white"
+              >
+                PRODUCTION
+              </Link>
             </nav>
           </div>
         </aside>
       </div>
 
-      <div className="w-[80vw] h-[85vh] fixed  top-0 right-0">
-        <h2>SMP REPORT</h2>
+      <div className="w-[80vw] h-[85vh] fixed  top-8 right-0">
 
-        <div className="h-3/4 overflow-y-auto scrollbar-hide">
+        <div className="h-3/4 overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
-            <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
+            <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
                 <th className="px-4 py-2">report_id</th>
+                <th className="px-4 py-2">mine_id</th>
                 <th className="px-4 py-2">status</th>
                 <th className="px-4 py-2">date</th>
                 <th className="px-4 py-2">inspected_by</th>
                 <th className="px-4 py-2">action</th>
               </tr>
             </thead>
-            <tbody className="max-h-[400px] overflow-y-auto ">
+            <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
               {smp.map((item) => (
-                <tr key={item.report_id} className="text-center">
+                <tr key={item.id} className="text-center">
                   <td className="border border-gray-300 px-4 py-2">
                     {item.report_id}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.mine_id}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {item.status}
@@ -138,14 +208,25 @@ const Reports = () => {
                     {item.inspected_by}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    <button className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none">
+                    <button
+                      className="px-4 py-1 bg-gray-500 rounded-md text-white outline-none"
+                      onClick={() => openModal(item)}
+                    >
                       update
                     </button>
                     <button
                       type="button"
-                      className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                      className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
+                      onClick={() => deleteItem(item._id)}
                     >
                       Delete
+                    </button>
+                    <button
+                      type="button"
+                      className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
+                      onClick={() => openAddModal()}
+                    >
+                      View
                     </button>
                   </td>
                 </tr>
@@ -159,99 +240,141 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* Report Form
-        <div className="max-w-2xl mx-auto bg-gray-300 p-6 rounded-lg shadow-md">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            
-            <div className="grid grid-cols-2 gap-4">
+      {/* popup form to update or delete*/}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-bold mb-4">Update SMP</h2>
+            <form>
+              <label className="block mb-2">Report Id</label>
               <input
                 type="text"
-                name="report_id"
-                placeholder="Report_id"
-                value={formData.report_id}
-                onChange={handleChange}
-                className="p-2 border border-gray-400 rounded w-full"
+                defaultValue={reportData?.report_id}
+                className="w-full p-2 border rounded mb-4"
+                readOnly="readonly"
               />
+              <label className="block mb-2">Mine Id</label>
               <input
-                type="text"
-                name="status"
-                placeholder="Report Status"
-                value={formData.status}
-                onChange={handleChange}
-                className="p-2 border border-gray-400 rounded w-full"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
                 name="mine_id"
-                placeholder="Mine_id"
-                value={formData.mine_id}
-                onChange={handleChange}
-                className="p-2 border border-gray-400 rounded w-full"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="p-2 border border-gray-400 rounded w-full"
-              />
-              <input
                 type="text"
-                name="inspected_by"
-                placeholder="Inspected_by"
-                value={formData.inspected_by}
-                onChange={handleChange}
-                className="p-2 border border-gray-400 rounded w-full"
+                defaultValue={reportData?.mine_id}
+                onChange={handleUpdate}
+                className="w-full p-2 border rounded mb-4"
               />
-            </div>
-            <textarea
-              name="findings"
-              placeholder="Findings"
-              value={formData.findings}
-              onChange={handleChange}
-              className="p-2 border border-gray-400 rounded w-full h-16"
-            />
 
-            <textarea
-              name="recommendations"
-              placeholder="Recommendations"
-              value={formData.recommendations}
-              onChange={handleChange}
-              className="p-2 border border-gray-400 rounded w-full h-16"
-            />
-            <div className="flex space-x-4 justify-end p-4">
-              <button
-                type="button"
-                className="px-6 py-2 bg-gray-800 text-white rounded-lg "
-              >
-                Update
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-2 bg-gray-800 text-white rounded-lg "
-              >
-                Add
-              </button>
-            </div>
-          </form> 
-        </div> */}
+              <label className="block mb-2">Status</label>
+              <input
+                name="status"
+                type="text"
+                defaultValue={reportData?.status}
+                onChange={handleUpdate}
+                className="w-full p-2 border rounded mb-4"
+              />
 
-      {/* <div className="w-2/3 mx-auto mt-10 p-6 bg-gray-100 shadow-lg rounded-xl">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Recommendations</h2>
-              <div className="max-h-60 overflow-y-auto">
-                  <ul className="list-disc list-inside text-gray-700">
-                      {recommendations.map((rec, index) => (
-                      <li key={index} className="py-1">{rec}</li>
-                      ))}
-                  </ul>
-                </div>
-          </div> */}
-      {/* </div> */}
+              <label className="block mb-2">Date</label>
+              <input
+                name="date"
+                type="date"
+                defaultValue={reportData?.date}
+                onChange={handleUpdate}
+                className="w-full p-2 border rounded mb-4"
+              />
+
+              <label className="block mb-2">Inspected By</label>
+              <input
+                name="inspected_by"
+                type="text"
+                defaultValue={reportData?.inspected_by}
+                onChange={handleUpdate}
+                className="w-full p-2 border rounded mb-4"
+              />
+
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                  onClick={() => updateItem(reportData._id)}
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* popup form to add */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-bold mb-4">View SMP</h2>
+            <form>
+              <label className="block mb-2">Report Id</label>
+              <input
+                name="report_id"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.report_id}
+                // onChange={handleView}
+              />
+              <label className="block mb-2">Mine Id</label>
+              <input
+                name="mine_id"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.mine_id}
+                // onChange={handleView}
+              />
+              <label className="block mb-2">Status</label>
+              <input
+                name="status"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.status}
+                // onChange={handleView}
+              />
+              <label className="block mb-2">Date</label>
+              <input
+                name="date"
+                type="date"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.date}
+                // onChange={handleView}
+              />
+              <label className="block mb-2">Inspected By</label>
+              <input
+                name="inspected_by"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.inspected_by}
+                // onChange={handleView}
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  onClick={closeAddModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  // onClick={addSMP}
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>

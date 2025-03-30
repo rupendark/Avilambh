@@ -139,6 +139,12 @@ const Inventory = () => {
               >
                 INVENTORY
               </Link>
+              <Link
+                to="/production"
+                className="block text-gray-300 hover:text-white"
+              >
+                PRODUCTION
+              </Link>
             </nav>
           </div>
         </aside>

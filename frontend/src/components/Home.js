@@ -199,6 +199,12 @@ const Home = () => {
                 >
                   INVENTORY
                 </Link>
+                <Link
+                  to="/production"
+                  className="block text-gray-300 hover:text-white"
+                >
+                  PRODUCTION
+                </Link>
               </nav>
             </div>
           </aside>
@@ -215,15 +221,15 @@ const Home = () => {
               </div>
               <Chart {...chartConfig} />
 
-              <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                  <div class="w-4 h-4 bg-green-500 rounded"></div>
-                  <span class="text-gray-700 text-sm">Completed</span>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-green-500 rounded"></div>
+                  <span className="text-gray-700 text-sm">Completed</span>
                 </div>
 
-                <div class="flex items-center space-x-2">
-                  <div class="w-4 h-4 bg-yellow-500 rounded"></div>
-                  <span class="text-gray-700 text-sm">Remaining</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+                  <span className="text-gray-700 text-sm">Remaining</span>
                 </div>
               </div>
             </div>

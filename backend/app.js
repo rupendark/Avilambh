@@ -12,6 +12,7 @@ const Transport = require("./model/transportSchema.js");
 const SMP = require("./model/smpSchema.js");
 const Drills = require("./model/trainingSchema.js");
 const Jobs = require("./model/jobSchema.js");
+const Production = require("./model/productionSchema.js")
 
 app.use(
   cors({

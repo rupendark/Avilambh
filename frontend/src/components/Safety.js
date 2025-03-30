@@ -130,17 +130,21 @@ const Saftey = () => {
               >
                 INVENTORY
               </Link>
+              <Link
+                to="/production"
+                className="block text-gray-300 hover:text-white"
+              >
+                PRODUCTION
+              </Link>
             </nav>
           </div>
         </aside>
       </div>
       <div className="w-[80vw] h-[85vh] fixed  top-0 right-0">
         <div className="p-4 bg-gray-200">
-          <div
-            className="p-4 w-5/6 h-[75vh]  bg-gray-500 mx-auto"
-          >
+          <div className="p-4 w-5/6 h-[75vh]  bg-gray-500 mx-auto">
             <h1 className="text-white text-xl">Safety drills/trainings</h1>
-            <div className="h-4/5 overflow-y-auto scrollbar-hide">
+            <div className="h-4/5 overflow-y-auto scrollbar-hide mt-4">
               <table className=" p-3 min-w-full bg-white">
                 <thead className="bg-gray-400">
                   <tr className="bg-gray-400 text-center w-auto">
@@ -153,7 +157,10 @@ const Saftey = () => {
                 </thead>
                 <tbody>
                   {drills.map((item) => (
-                    <tr key={item.drill_id} className="hover:bg-gray-100 text-center">
+                    <tr
+                      key={item.drill_id}
+                      className="hover:bg-gray-100 text-center"
+                    >
                       <td className="border p-2">{item.drill_id}</td>
                       <td className="border p-2">{item.training_type}</td>
                       <td className="border p-2">
@@ -220,7 +227,7 @@ const Saftey = () => {
                 name="scheduled_date"
                 type="date"
                 onChange={handleChange2}
-                defaultValue={selectedItem?.scheduled_date.slice(0,10)}
+                defaultValue={selectedItem?.scheduled_date.slice(0, 10)}
                 className="w-full p-2 border rounded mb-4"
               />
               <label className="block mb-2">Incharge</label>

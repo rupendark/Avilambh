@@ -1,23 +1,23 @@
-import React from 'react'
+import React from "react";
 import Footer from "./Footer";
-import axios from 'axios';
+import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Production = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [production, setProduction] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-   const [productionData, setProductionData] = useState({
-      Production_Id: "",
-      Mine_Id: "",
-      Date: "",
-      Quality: "",
-      Quantity: ""
-    });
-     //Handle input change for update
+  const [productionData, setProductionData] = useState({
+    Production_Id: "",
+    Mine_Id: "",
+    Date: "",
+    Quality: "",
+    Quantity: "",
+  });
+  //Handle input change for update
   const handleProductionUpdate = (e) => {
     setProductionData({ ...productionData, [e.target.name]: e.target.value });
   };
@@ -26,18 +26,16 @@ const Production = () => {
     axios
       .get("http://localhost:5000/production", {
         withCredentials: true,
-      }) 
+      })
       .then((response) => {
         setProduction(response.data);
-        console.log(response.data)
       })
       .catch((error) => {
         console.error("Error fetching production data:", error);
       });
   }, []);
 
-
-     //popup form functions
+  //popup form functions
   const openModal = (item) => {
     setProductionData(item);
     setIsModalOpen(true);
@@ -71,19 +69,8 @@ const Production = () => {
     }
   };
 
-  
-
-
-
-  // const productions = [
-  //   { production_id: "PRO010", mine_id: "MINE02", date: "10-02-2024", quality:"GOOD", quantity:112 },
-  //   { production_id: "PRO016", mine_id: "MINE04", date: "16-02-2024", quality:"GOOD", quantity:223 },
-  //   { production_id: "PRO07", mine_id: "MINE03", date: "16-02-2024", quality:"GOOD", quantity:333},
-  //   { production_id: "PRO020", mine_id: "MINE06", date: "16-02-2024", quality:"GOOD", quantity:345 },
-  // ];
-
   return (
-   <>
+    <>
       <div className="flex h-[90vh]">
         {/* Sidebar */}
         <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
@@ -98,9 +85,12 @@ const Production = () => {
               >
                 HOME
               </Link>
+              <Link to="/Jobs" className="block text-gray-300 hover:text-white">
+                JOB SCHEDULE
+              </Link>
               <Link
                 to="/reports"
-                className="block text-gray-300 hover:text-white underline"
+                className="block text-gray-300 hover:text-white "
               >
                 REPORTS
               </Link>
@@ -124,7 +114,7 @@ const Production = () => {
               </Link>
               <Link
                 to="/production"
-                className="block text-gray-300 hover:text-white"
+                className="block text-gray-300 hover:text-white underline"
               >
                 PRODUCTION
               </Link>
@@ -136,7 +126,7 @@ const Production = () => {
       <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
         <div className="h-3/4 overflow-y-auto">
           <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
-            <thead class="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
+            <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
               <tr className="text-center">
                 <th className="px-4 py-2">Production ID</th>
                 <th className="px-4 py-2">Mine ID</th>
@@ -148,7 +138,7 @@ const Production = () => {
             </thead>
             <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
               {production.map((item) => (
-                <tr key={item.id} className="text-center">
+                <tr key={item.Production_Id} className="text-center">
                   <td className="border border-gray-300 px-4 py-2">
                     {item.Production_Id}
                   </td>
@@ -256,8 +246,8 @@ const Production = () => {
       )}
 
       <Footer />
-   </>
-  )
-}
+    </>
+  );
+};
 
-export default Production
+export default Production;
