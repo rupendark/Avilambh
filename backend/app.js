@@ -281,6 +281,40 @@ app.post("/reports/addItem", async (req, res) => {
 });
 
 
+// Production
+app.get("/production", async (req, res) => {
+  const items = await Production.find();
+  res.send(items);
+});
+app.delete("/production/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Production.findByIdAndDelete(id);
+    res.json({ message: "Item deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting item" });
+  }
+});
+app.put("/production/update/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Production_Id, Mine_Id, Date, Quality, Quantity } = req.body;
+    console.log(req.body);
+    const updatedItem = await Production.findByIdAndUpdate(id, {
+      Production_Id,
+      Mine_Id,
+      Date,
+      Quality,
+      Quantity
+    });
+
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating item" });
+  }
+});
+
+
 //START SERVER
 app.listen(5000, () => {
   console.log(`http://localhost:5000`);
