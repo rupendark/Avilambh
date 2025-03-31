@@ -49,10 +49,7 @@ const Footer = () => {
           Logout
         </button>
       </div>
-      <p className="text-sm text-gray-400">&copy; Avilambh2025</p>
-      <p className="text-sm text-gray-300">
-        <span className="font-bold">Owner:</span> Mr 979797XXXX
-      </p>
+      <p className="text-sm text-gray-400 mx-auto">&copy; Avilambh2025</p>
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">

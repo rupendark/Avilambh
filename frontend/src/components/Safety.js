@@ -3,6 +3,7 @@ import axios from "axios";
 import Footer from "./Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const Saftey = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Saftey = () => {
     potential_danger: "",
     incharge: "",
   });
+  const [userRole, setUserRole] = useState({ role: "" });
 
   useEffect(() => {
     axios
@@ -28,6 +30,12 @@ const Saftey = () => {
       .catch((error) => {
         console.error("Error fetching transport data:", error);
       });
+    const token = Cookies.get("jwtToken");
+    const parsedData = JSON.parse(token.substring(2));
+    const { role } = parsedData[0];
+    setUserRole({
+      role: role,
+    });
   }, []);
 
   // Handle input change fr add
@@ -152,7 +160,9 @@ const Saftey = () => {
                     <th className="text-white border p-2">training_type</th>
                     <th className="text-white border p-2">Scheduled Date</th>
                     <th className="text-white border p-2">Incharge</th>
-                    <th className="text-white border p-2">Action</th>
+                    {userRole.role !== "owner" && (
+                      <th className="text-white border p-2">Action</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -167,36 +177,40 @@ const Saftey = () => {
                         {item.scheduled_date.slice(0, 10)}
                       </td>
                       <td className="border p-2">{item.incharge}</td>
-                      <td className="border border-gray-300 px-4 py-2">
-                        <button
-                          className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
-                          onClick={() => openModal(item)}
-                        >
-                          update
-                        </button>
-                        <button
-                          type="button"
-                          className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
-                          // onClick={() => deleteItem(item._id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
+                      {userRole.role !== "owner" && (
+                        <td className="border border-gray-300 px-4 py-2">
+                          <button
+                            className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
+                            onClick={() => openModal(item)}
+                          >
+                            update
+                          </button>
+                          <button
+                            type="button"
+                            className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                            // onClick={() => deleteItem(item._id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-          <div className="flex space-x-4 justify-end p-4">
-            <button
-              type="button"
-              className="px-6 py-2 bg-gray-800 text-white rounded-lg "
-              onClick={openAddModal}
-            >
-              Add
-            </button>
-          </div>
+          {userRole.role !== "owner" && (
+            <div className="flex space-x-4 justify-end p-4">
+              <button
+                type="button"
+                className="px-6 py-2 bg-gray-800 text-white rounded-lg "
+                onClick={openAddModal}
+              >
+                Add
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

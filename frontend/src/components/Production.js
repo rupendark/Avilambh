@@ -4,12 +4,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
 
 const Production = () => {
   const navigate = useNavigate();
   const [production, setProduction] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [userRole, setUserRole] = useState({ role: "" });
   const [productionData, setProductionData] = useState({
     Production_Id: "",
     Mine_Id: "",
@@ -33,6 +35,12 @@ const Production = () => {
       .catch((error) => {
         console.error("Error fetching production data:", error);
       });
+    const token = Cookies.get("jwtToken");
+    const parsedData = JSON.parse(token.substring(2));
+    const { role } = parsedData[0];
+    setUserRole({
+      role: role,
+    });
   }, []);
 
   //popup form functions
@@ -133,7 +141,9 @@ const Production = () => {
                 <th className="px-4 py-2">Date</th>
                 <th className="px-4 py-2">Quality</th>
                 <th className="px-4 py-2">Quantity</th>
-                <th className="px-4 py-2">Actions</th>
+                {userRole.role !== "owner" && (
+                  <th className="px-4 py-2">Actions</th>
+                )}
               </tr>
             </thead>
             <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
@@ -154,6 +164,7 @@ const Production = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {item.Quantity}
                   </td>
+                  {userRole.role !== "owner" && (
                   <td className="border border-gray-300 px-4 py-2">
                     <button
                       className="px-4 py-1 bg-gray-500 rounded-md text-white outline-none"
@@ -169,6 +180,7 @@ const Production = () => {
                       Delete
                     </button>
                   </td>
+                  )}
                 </tr>
               ))}
             </tbody>

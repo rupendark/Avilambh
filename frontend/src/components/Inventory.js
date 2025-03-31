@@ -3,6 +3,7 @@ import axios from "axios";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Inventory = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Inventory = () => {
     quantity: "",
     reorder_level: "",
   });
+  const [userRole, setUserRole] = useState({ role: "" });
 
   // Handle input change
   const handleChange = (e) => {
@@ -36,6 +38,12 @@ const Inventory = () => {
       .catch((error) => {
         console.error("Error fetching inventory data:", error);
       });
+    const token = Cookies.get("jwtToken");
+    const parsedData = JSON.parse(token.substring(2));
+    const { role } = parsedData[0];
+    setUserRole({
+      role: role,
+    });
   }, []);
 
   //popup form functions
@@ -158,7 +166,9 @@ const Inventory = () => {
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Quantity</th>
                 <th className="px-4 py-2">Reorder Level</th>
-                <th className="px-4 py-2">Action</th>
+                {userRole.role !== "owner" && (
+                  <th className="px-4 py-2">Action</th>
+                )}
               </tr>
             </thead>
             <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
@@ -176,32 +186,35 @@ const Inventory = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {item.reorder_level}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
-                      onClick={() => openModal(item)}
-                    >
-                      update
-                    </button>
-                    <button
-                      type="button"
-                      className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
-                      onClick={() => deleteItem(item._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+                  {userRole.role !== "owner" && (
+                    <td className="border border-gray-300 px-4 py-2">
+                      <button
+                        className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
+                        onClick={() => openModal(item)}
+                      >
+                        update
+                      </button>
+                      <button
+                        type="button"
+                        className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                        onClick={() => deleteItem(item._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
-
-          <button
-            className="absolute bottom-6 right-32 bg-blue-500 text-white px-6 py-1 rounded"
-            onClick={() => openAddModal()}
-          >
-            Add
-          </button>
+          {userRole.role !== "owner" && (
+            <button
+              className="absolute bottom-6 right-32 bg-blue-500 text-white px-6 py-1 rounded"
+              onClick={() => openAddModal()}
+            >
+              Add
+            </button>
+          )}
         </div>
       </div>
 

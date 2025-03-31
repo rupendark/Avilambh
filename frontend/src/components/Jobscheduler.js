@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import Cookies from "js-cookie";
 
 const localizer = momentLocalizer(moment);
 
@@ -23,6 +24,7 @@ const Jobscheduler = () => {
     smp_id: "",
   });
   const [date, setDate] = useState(new Date());
+  const [userRole, setUserRole] = useState({ role: "" });
 
   useEffect(() => {
     axios
@@ -33,6 +35,12 @@ const Jobscheduler = () => {
       .catch((error) => {
         console.error("Error fetching job data:", error);
       });
+    const token = Cookies.get("jwtToken");
+    const parsedData = JSON.parse(token.substring(2));
+    const { role} = parsedData[0];
+    setUserRole({
+      role: role,
+    });
   }, []);
 
   const events = jobs.map((job) => ({
@@ -213,12 +221,14 @@ const Jobscheduler = () => {
           />
         </div>
 
-        <button
-          className="absolute bottom-0 right-16 bg-blue-500 text-white px-6 py-1 rounded"
-          onClick={openAddModal}
-        >
-          ADD
-        </button>
+        {userRole.role !== "owner" && (
+          <button
+            className="absolute bottom-0 right-16 bg-blue-500 text-white px-6 py-1 rounded"
+            onClick={openAddModal}
+          >
+            ADD
+          </button>
+        )}
       </div>
 
       {/* popup form to update or delete*/}
@@ -288,7 +298,7 @@ const Jobscheduler = () => {
                 >
                   Cancel
                 </button>
-                {!isPastJob && (
+                {userRole.role !== "owner" && !isPastJob && (
                   <>
                     <button
                       type="button"

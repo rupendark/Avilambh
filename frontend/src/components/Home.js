@@ -4,12 +4,15 @@ import moment from "moment";
 import Chart from "react-apexcharts";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
+import map from "../maps/map.gif";
+import map2 from "../maps/map2.jpg";
 
 const Home = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState([]);
   const [currtime, setCurrTime] = useState();
   const today = moment().format("YYYY-MM-DD");
+  const [mapSrc, setMapSrc] = useState(map);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,8 +75,10 @@ const Home = () => {
   });
 
   // Filter jobs for the current day
-  const todayJobs = jobs.filter((job) =>
-    moment(job.start_time).isSame(today, "day")
+  const todayJobs = jobs.filter(
+    (job) =>
+      moment(job.start_time).isSame(today, "day") ||
+      moment(job.end_time).isSame(today, "day")
   );
 
   const getJobStyle = (batch) => {
@@ -209,15 +214,45 @@ const Home = () => {
             </div>
           </aside>
         </div>
-        <div className="w-[80vw] h-[80vh] fixed top-0 right-0 ">
-          <div className="w-[60vw] h-[40vh] bg-slate-500 mx-auto my-6 grid grid-cols-5 ">
+        <div className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto">
+          <div className="bg-slate-500 h-[50vh] w-[60vw] mx-auto mt-4 relative flex p-4">
+            <img
+              src={mapSrc}
+              alt="Site Map"
+              class="w-[40vw] border border-gray-400 shadow-lg ml-8"
+            />
+
+            <div class="absolute right-16 top-12 flex flex-col space-y-3">
+              <button
+                class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
+                onClick={()=>setMapSrc(map)}
+              >
+                Mine 1
+              </button>
+              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600" onClick={()=>setMapSrc(map2)}>
+                Mine 2
+              </button>
+              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+                Mine 3
+              </button>
+              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+                Mine 4
+              </button>
+              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+                Mine 5
+              </button>
+            </div>
+          </div>
+
+          {/* //job progress */}
+          <div className="w-[60vw] h-[45vh] bg-slate-500 mx-auto my-6 grid grid-cols-5 ">
             <div className="p-6 col-span-2 mx-auto">
-              <div className="text-white left">
-                {selectedJob.id || "job_id"} : {selectedJob.task || "Task"}  
-                <br/>
-                batch : {selectedJob.batch||"task not selected"}
-                <br/>
-                SMP : {selectedJob.smp_id||"task not selected"}
+              <div className="text-white w-72 left">
+                {selectedJob.id || "job_id"} : {selectedJob.task || "Task"}
+                <br />
+                batch : {selectedJob.batch || "task not selected"}
+                <br />
+                SMP : {selectedJob.smp_id || "task not selected"}
               </div>
               <Chart {...chartConfig} />
 

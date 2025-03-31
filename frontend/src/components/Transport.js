@@ -3,6 +3,7 @@ import axios from "axios";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Transport = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const Transport = () => {
     quantity: "",
     flag: "false",
   });
+  const [userRole, setUserRole] = useState({ role: "" });
+
   // Handle input change fr add
   const handleChange = (e) => {
     setNewItem({ ...newItem, [e.target.name]: e.target.value });
@@ -38,6 +41,12 @@ const Transport = () => {
       .catch((error) => {
         console.error("Error fetching transport data:", error);
       });
+    const token = Cookies.get("jwtToken");
+    const parsedData = JSON.parse(token.substring(2));
+    const { role } = parsedData[0];
+    setUserRole({
+      role: role,
+    });
   }, []);
 
   const completedTransport = transport.filter((item) => item.flag);
@@ -215,7 +224,9 @@ const Transport = () => {
                   <th className="px-4 py-2">Date</th>
                   <th className="px-4 py-2">To</th>
                   <th className="px-4 py-2">Qunatity</th>
-                  <th className="px-4 py-2 w-40">Action</th>
+                  {userRole.role !== "owner" && (
+                    <th className="px-4 py-2 w-40">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody className="max-h-4/5 text-white text-sm">
@@ -231,40 +242,45 @@ const Transport = () => {
                     </td>
                     <td className="pl-2">{item.destination}</td>
                     <td className="">{item.quantity}</td>
-                    <td className="flex">
-                      <button
-                        type="button"
-                        className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
-                        onClick={() => deleteTransport(item._id)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        type="button"
-                        className="px-4 py-1 ml-2 bg-yellow-600 rounded-md text-white outline-none"
-                        onClick={() => openModal(item)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="px-4 py-1 ml-2 bg-green-500 rounded-md text-white outline-none mr-4"
-                        onClick={() => compTransport(item._id)}
-                      >
-                        done
-                      </button>
-                    </td>
+                    {userRole.role !== "owner" && (
+                      <td className="flex">
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                          onClick={() => deleteTransport(item._id)}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-yellow-600 rounded-md text-white outline-none"
+                          onClick={() => openModal(item)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-green-500 rounded-md text-white outline-none mr-4"
+                          onClick={() => compTransport(item._id)}
+                        >
+                          done
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {userRole.role !== "owner" && (
+
           <button
             className="absolute bottom-3 right-24 bg-blue-500 text-white px-6 py-1 rounded"
             onClick={() => openAddModal()}
           >
             Add
           </button>
+          )}
         </div>
       </div>
 
