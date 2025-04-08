@@ -33,15 +33,14 @@ router.post("/login", async (req, res) => {
 
     const userdata = await User.find({ email });
 
-    const token = generateToken(userdata);
+    // const token = generateToken(userdata);
     res.cookie("jwtToken", userdata, {
       httpOnly: false,
-      secure: false, // Set to `true` in production with HTTPS
-      maxAge: 5*3600000,
+      secure: false,
+      maxAge: 18000000,
       sameSite: "Strict",
     });
 
-    // return res.status(200).json({ message: "Login successful", token });
     return res.status(200).json({ message: "Login successful"});
   } catch (err) {
     console.error("An unexpected error occurred:", err);

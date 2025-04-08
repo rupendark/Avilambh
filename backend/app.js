@@ -5,14 +5,16 @@ const cookieParser = require("cookie-parser");
 require("./connection.js");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const twilio = require("twilio");
+require("dotenv").config();
 const Inventory = require("./model/inventorySchema");
 const Counter = require("./model/counterSchema");
-const { isGuest } = require("./middleware/auth");
 const Transport = require("./model/transportSchema.js");
 const SMP = require("./model/smpSchema.js");
 const Drills = require("./model/trainingSchema.js");
 const Jobs = require("./model/jobSchema.js");
-const Production = require("./model/productionSchema.js")
+const Production = require("./model/productionSchema.js");
+
 
 app.use(
   cors({
@@ -22,6 +24,11 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
+const client = new twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 app.use("/auth", authRoutes);
 app.use("/test", userRoutes);
@@ -41,8 +48,20 @@ const getNextId = async (name) => {
   }
 };
 
-app.get("/", (req, res) => {
-  res.send("HELLo");
+
+//SEND SMS
+app.post("/send-sms", async (req, res) => {
+  data = req.body;
+  try {
+    const response = await client.messages.create({
+      body: `task: ${data.task} , start_time:  ${data.start_time}, end_time:  ${data.end_time}`,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: process.env.TEST_PHONE_NUMBER,
+    });
+    console.log("SMS Sent:", response.sid);
+  } catch (error) {
+    console.error("Twilio Error:", error);
+  }
 });
 
 //JOB SCHEDULING
@@ -96,31 +115,6 @@ app.put("/jobs/update/:id", async (req, res) => {
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
-  }
-});
-
-//SMP REPORT
-app.get("/smpReport", async (req, res) => {
-  const items = await SMP.find();
-  res.send(items);
-});
-app.post("/smpReport/addItem", async (req, res) => {
-  try {
-    const newId = await getNextId("smpId");
-    const newItem = {
-      report_Id: `SMP${newId}`,
-      // item_name: req.body.item_name,
-      // quantity: req.body.quantity,
-      // reorder_level: req.body.reorder_level
-    };
-    console.log(newItem);
-
-    await SMP.insertOne(newItem);
-
-    res.status(201).send({ message: "New item added" });
-    console.log("Item added");
-  } catch (error) {
-    res.status(500).send({ error: "Error" });
   }
 });
 
@@ -203,7 +197,6 @@ app.put("/inventory/update/:id", async (req, res) => {
   }
 });
 
-
 //TRANSPORT
 app.get("/transport", async (req, res) => {
   const items = await Transport.find();
@@ -265,22 +258,74 @@ app.put("/transport/update/:id", async (req, res) => {
   }
 });
 
-
 //REPORTS
-app.get("/reports", isGuest, async (req, res) => {
+app.get("/reports", async (req, res) => {
   const items = await SMP.find();
   res.send(items);
 });
 app.post("/reports/addItem", async (req, res) => {
+  console.log(req.body);
+  const newId = await getNextId("smpId");
+
+  const newItem = {
+    report_id: `SMP${newId}`, // Unique auto increment
+    mine_id: req.body.mine_id,
+    status: req.body.status,
+    date: req.body.date,
+    findings: req.body.findings,
+    inspected_by: req.body.inspected_by,
+    recommendations: req.body.recommendations,
+  };
+  console.log(newItem);
   try {
-    await SMP.insertOne(req.body);
+    await SMP.insertOne(newItem);
     res.status(201).send({ message: "Report saved successfully!" });
     console.log("Report saved successfully!");
   } catch (error) {
     res.status(500).send({ error: "Error saving report" });
   }
 });
+app.delete("/reports/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await SMP.findByIdAndDelete(id);
+    res.json({ message: "Item deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting item" });
+  }
+});
+app.put("/reports/update/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { report_id, mine_id, status, date, inspected_by } = req.body;
+    console.log(req.body);
+    const updatedItem = await SMP.findByIdAndUpdate(id, {
+      report_id,
+      mine_id,
+      status,
+      date,
+      inspected_by,
+    });
 
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating item" });
+  }
+});
+app.put("/reports/approve/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedItem = await SMP.findByIdAndUpdate(
+      id,
+      { $set: { status: true } },
+      { new: true }
+    );
+    res.json(updatedItem);
+    console.log("updated");
+  } catch (error) {
+    res.status(500).json({ error: "Error updating item" });
+  }
+});
 
 // Production
 app.get("/production", async (req, res) => {
@@ -299,22 +344,33 @@ app.delete("/production/delete/:id", async (req, res) => {
 app.put("/production/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { Production_Id, Mine_Id, Date, Quality, Quantity } = req.body;
-    console.log(req.body);
-    const updatedItem = await Production.findByIdAndUpdate(id, {
-      Production_Id,
-      Mine_Id,
-      Date,
-      Quality,
-      Quantity
-    });
+    const data = req.body;
+    const updatedItem = await Production.findByIdAndUpdate(id, data);
 
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
   }
 });
-
+app.post("/production/addItem", async (req, res) => {
+  console.log(req.body);
+  const newId = await getNextId("productionId");
+  const newItem = {
+    Production_Id: `PRO${newId}`, // Unique auto increment
+    Mine_Id: req.body.mine_id,
+    Date: req.body.date,
+    Quantity: req.body.quantity,
+    Quality: req.body.quality
+  };
+  console.log(newItem);
+  try {
+    await Production.insertOne(newItem);
+    res.status(201).send({ message: "Report saved successfully!" });
+    console.log("Report saved successfully!");
+  } catch (error) {
+    res.status(500).send({ error: "Error saving report" });
+  }
+});
 
 //START SERVER
 app.listen(5000, () => {

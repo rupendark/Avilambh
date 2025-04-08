@@ -6,7 +6,7 @@ const productionSchema = new mongoose.Schema({
     Date: { type: String, required: true }, 
     Quantity: { type: Number, required: true },
     Quality: { type: String, required: true } 
-}, { collection: "production" }); // Explicitly reference the collection name
+}, { collection: "Production" }); // Explicitly reference the collection name
 
 const Production = mongoose.model("Production", productionSchema,'Production');
 

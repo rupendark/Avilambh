@@ -1,24 +1,39 @@
 import React from "react";
 import Footer from "./Footer";
 import axios from "axios";
+import moment from "moment";
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-
 const Production = () => {
   const navigate = useNavigate();
   const [production, setProduction] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userRole, setUserRole] = useState({ role: "" });
   const [productionData, setProductionData] = useState({
     Production_Id: "",
     Mine_Id: "",
     Date: "",
-    Quality: "",
     Quantity: "",
+    Quality: "",
   });
+  const [newItem, setNewItem] = useState({
+    // production_id: "",
+    mine_id: "",
+    date: "",
+    quantity: "",
+    quality: "",
+  });
+  const today = moment().format("YYYY-MM-DD");
+  // Handle Production Add
+  const handleView = (e) => {
+    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+  };
+
   //Handle input change for update
   const handleProductionUpdate = (e) => {
     setProductionData({ ...productionData, [e.target.name]: e.target.value });
@@ -54,7 +69,34 @@ const Production = () => {
     setProductionData(null);
   };
 
+  // popup ADD Production functions
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+    setNewItem({
+      Production_Id: "",
+      Mine_Id: "",
+      Date: "",
+      Quantity: "",
+      Quality: "",
+    });
+  };
+
   // CURD Operations
+  const addProduction = async (e) => {
+    e.preventDefault();
+    console.log(newItem);
+    try {
+      await axios.post("http://localhost:5000/production/addItem", newItem);
+      navigate(0);
+      console.log("Data saved:");
+    } catch (error) {
+      alert("Error submitting form");
+    }
+  };
   const updateItem = async (id) => {
     try {
       console.log(productionData);
@@ -165,26 +207,39 @@ const Production = () => {
                     {item.Quantity}
                   </td>
                   {userRole.role !== "owner" && (
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      className="px-4 py-1 bg-gray-500 rounded-md text-white outline-none"
-                      onClick={() => openModal(item)}
-                    >
-                      update
-                    </button>
-                    <button
+                    <td className="border border-gray-300 px-4 py-2">
+                      <button
+                        className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
+                        onClick={() => openModal(item)}
+                      >
+                        update
+                      </button>
+                      <button
+                        type="button"
+                        className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
+                        onClick={() => deleteItem(item._id)}
+                      >
+                        Delete
+                      </button>
+                      {/* <button
                       type="button"
-                      className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
-                      onClick={() => deleteItem(item._id)}
+                        className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
+                      onClick={() => openAddModal()}
                     >
-                      Delete
-                    </button>
-                  </td>
+                       Add
+                    </button> */}
+                    </td>
                   )}
                 </tr>
               ))}
             </tbody>
           </table>
+          <button
+            className="absolute bottom-6 right-32 bg-gray-500 text-white px-6 py-1 rounded"
+            onClick={() => openAddModal()}
+          >
+            Add
+          </button>
         </div>
       </div>
       {/* popup form to update*/}
@@ -250,6 +305,64 @@ const Production = () => {
                   onClick={() => updateItem(productionData._id)}
                 >
                   Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* popup form to add */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-bold mb-4">ADD Production</h2>
+            <form>
+              <label className="block mb-2">Mine Id</label>
+              <input
+                name="mine_id"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.mine_id}
+                onChange={handleView}
+              />
+              <label className="block mb-2">Date</label>
+              <input
+                name="date"
+                type="date"
+                className="w-full p-2 border rounded mb-4"
+                value={today}
+                onChange={handleView}
+              />
+              <label className="block mb-2">Quality</label>
+              <input
+                name="quality"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.quality}
+                onChange={handleView}
+              />
+              <label className="block mb-2">Quantity</label>
+              <input
+                name="quantity"
+                type="number"
+                className="w-full p-2 border rounded mb-4"
+                value={newItem.quantity}
+                onChange={handleView}
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  onClick={closeAddModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  onClick={addProduction}
+                >
+                  Add
                 </button>
               </div>
             </form>

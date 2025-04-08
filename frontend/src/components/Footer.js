@@ -33,7 +33,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 py-4 px-6 h-[10vh] flex justify-between items-center">
+    <footer className="bg-[#123458] py-4 px-6 h-[10vh] flex justify-between items-center">
       <div className="flex justify-between items-center space-x-12">
         {/* Left Section: Name & Role in Two Rows */}
         <div className="flex flex-col">

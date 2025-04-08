@@ -162,12 +162,12 @@ const Home = () => {
       <>
         <div className="flex h-[90vh]">
           {/* Sidebar */}
-          <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
+          <aside className="w-[20vw]  bg-[#1f3b63] text-white p-6 flex flex-col justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-[#359BD2] text-center">
+              <h1 className="text-5xl font-bold text-[#13243c] text-center">
                 AVILAMBH
               </h1>
-              <nav className="mt-6 space-y-4 pt-24 pl-8">
+              <nav className="mt-6  font-sans  space-y-4 pt-24 pl-8">
                 <Link
                   to="/home"
                   className="block text-gray-300 hover:text-white underline"
@@ -219,26 +219,26 @@ const Home = () => {
             <img
               src={mapSrc}
               alt="Site Map"
-              class="w-[40vw] border border-gray-400 shadow-lg ml-8"
+              className="w-[40vw] border border-gray-400 shadow-lg ml-8"
             />
 
-            <div class="absolute right-16 top-12 flex flex-col space-y-3">
+            <div className="absolute right-16 top-12 flex flex-col space-y-3">
               <button
-                class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
+                className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
                 onClick={()=>setMapSrc(map)}
               >
                 Mine 1
               </button>
-              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600" onClick={()=>setMapSrc(map2)}>
+              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600" onClick={()=>setMapSrc(map2)}>
                 Mine 2
               </button>
-              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 3
               </button>
-              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 4
               </button>
-              <button class="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 5
               </button>
             </div>

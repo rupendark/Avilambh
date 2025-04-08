@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-
-mongoose.connect("mongodb+srv://rupendark301:rzWH3Jsfr1icbeH7@avilambh.sbyrp.mongodb.net/AVILAMBH?retryWrites=true&w=majority&appName=AVILAMBH"
+mongoose.connect(process.env.Mongo_Conn_String
 ).then(async () => {
     console.log("Connected to MongoDB Atlas");
     const db = mongoose.connection.db;

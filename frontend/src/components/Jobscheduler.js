@@ -115,9 +115,17 @@ const Jobscheduler = () => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:5000/jobs/addItem", newItem);
+      sendSMS();
       navigate(0);
     } catch (error) {
       alert("Error submitting form");
+    }
+  };
+  const sendSMS = async () => {
+    try {
+      await axios.post("http://localhost:5000/send-sms", newItem);
+    } catch (error) {
+      alert("Error sending sms");
     }
   };
   const deleteJob = async (id) => {
