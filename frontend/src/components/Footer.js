@@ -40,16 +40,15 @@ const Footer = () => {
           <span className="text-white text-xl">{newItem.name}</span>
           <span className="text-gray-400 text-lg">{newItem.role}</span>
         </div>
-
-        {/* Right Section: Logout Button */}
-        <button
-          onClick={() => setShowPopup(true)}
-          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
-        >
-          Logout
-        </button>
       </div>
       <p className="text-sm text-gray-400 mx-auto">&copy; Avilambh2025</p>
+      {/* Right Section: Logout Button */}
+      <button
+        onClick={() => setShowPopup(true)}
+        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+      >
+        Logout
+      </button>
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">

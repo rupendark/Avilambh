@@ -162,51 +162,51 @@ const Home = () => {
       <>
         <div className="flex h-[90vh]">
           {/* Sidebar */}
-          <aside className="w-[20vw]  bg-[#1f3b63] text-white p-6 flex flex-col justify-between">
+          <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
             <div>
-              <h1 className="text-5xl font-bold text-[#13243c] text-center">
+              <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
                 AVILAMBH
               </h1>
-              <nav className="mt-6  font-sans  space-y-4 pt-24 pl-8">
+              <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
                 <Link
                   to="/home"
-                  className="block text-gray-300 hover:text-white underline"
+                  className="block  text-white shadow-xl  text-[26px]"
                 >
                   HOME
                 </Link>
                 <Link
                   to="/Jobs"
-                  className="block text-gray-300 hover:text-white"
+                  className="block text-gray-300 hover:shadow-xl "
                 >
                   JOB SCHEDULE
                 </Link>
                 <Link
                   to="/reports"
-                  className="block text-gray-300 hover:text-white"
+                  className="block text-gray-300  hover:shadow-xl "
                 >
                   REPORTS
                 </Link>
                 <Link
                   to="/safety"
-                  className="block text-gray-300 hover:text-white"
+                  className="block text-gray-300 hover:shadow-xl"
                 >
                   SAFETY
                 </Link>
                 <Link
                   to="/transport"
-                  className="block text-gray-300 hover:text-white"
+                  className="block text-gray-300 hover:shadow-xl"
                 >
                   TRANSPORT
                 </Link>
                 <Link
                   to="/inventory"
-                  className="block text-gray-300 hover:text-white"
+                  className="block text-gray-300 hover:shadow-xl"
                 >
                   INVENTORY
                 </Link>
                 <Link
                   to="/production"
-                  className="block text-gray-300 hover:text-white"
+                  className="block text-gray-300 hover:shadow-xl"
                 >
                   PRODUCTION
                 </Link>
@@ -225,11 +225,14 @@ const Home = () => {
             <div className="absolute right-16 top-12 flex flex-col space-y-3">
               <button
                 className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
-                onClick={()=>setMapSrc(map)}
+                onClick={() => setMapSrc(map)}
               >
                 Mine 1
               </button>
-              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600" onClick={()=>setMapSrc(map2)}>
+              <button
+                className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
+                onClick={() => setMapSrc(map2)}
+              >
                 Mine 2
               </button>
               <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">

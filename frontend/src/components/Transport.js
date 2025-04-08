@@ -125,48 +125,45 @@ const Transport = () => {
     <>
       <div className="flex h-[90vh]">
         {/* Sidebar */}
-        <aside className="w-[20vw]  bg-[#4A4752] text-white p-6 flex flex-col justify-between">
+        <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-[#359BD2] text-center">
+            <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
               AVILAMBH
             </h1>
-            <nav className="mt-6 space-y-4 pt-24 pl-8">
-              <Link
-                to="/home"
-                className="block text-gray-300 hover:text-white "
-              >
+            <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
+              <Link to="/home" className="block text-gray-300 hover:shadow-xl">
                 HOME
               </Link>
-              <Link to="/Jobs" className="block text-gray-300 hover:text-white">
+              <Link to="/Jobs" className="block text-gray-300 hover:shadow-xl ">
                 JOB SCHEDULE
               </Link>
               <Link
                 to="/reports"
-                className="block text-gray-300 hover:text-white"
+                className="block text-gray-300 hover:shadow-xl"
               >
                 REPORTS
               </Link>
               <Link
                 to="/safety"
-                className="block text-gray-300 hover:text-white"
+                className="block text-gray-300 hover:shadow-xl"
               >
                 SAFETY
               </Link>
               <Link
                 to="/transport"
-                className="block text-gray-300 hover:text-white underline"
+                className="block  text-white shadow-xl  text-[26px]"
               >
                 TRANSPORT
               </Link>
               <Link
                 to="/inventory"
-                className="block text-gray-300 hover:text-white "
+                className="block text-gray-300 hover:shadow-xl"
               >
                 INVENTORY
               </Link>
               <Link
                 to="/production"
-                className="block text-gray-300 hover:text-white"
+                className="block text-gray-300  hover:shadow-xl "
               >
                 PRODUCTION
               </Link>
@@ -273,13 +270,12 @@ const Transport = () => {
             </table>
           </div>
           {userRole.role !== "owner" && (
-
-          <button
-            className="absolute bottom-3 right-24 bg-blue-500 text-white px-6 py-1 rounded"
-            onClick={() => openAddModal()}
-          >
-            Add
-          </button>
+            <button
+              className="absolute bottom-3 right-24 bg-blue-500 text-white px-6 py-1 rounded"
+              onClick={() => openAddModal()}
+            >
+              Add
+            </button>
           )}
         </div>
       </div>
