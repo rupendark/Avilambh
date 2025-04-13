@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import map from "../maps/map.gif";
 import map2 from "../maps/map2.jpg";
+import bg from "../maps/bg.jpg";
 
 const Home = () => {
   const [jobs, setJobs] = useState([]);
@@ -83,9 +84,9 @@ const Home = () => {
 
   const getJobStyle = (batch) => {
     const batchColors = {
-      1: "#f6c23e", // Yellow
-      2: "#1cc88a", // Green
-      3: "#36b9cc", // Blue
+      1: "#9897A9", 
+      2: "#808080", 
+      3: "#c5c6d0", 
     };
     return {
       backgroundColor: batchColors[batch] || "#4e73df", // Default Blue
@@ -162,9 +163,9 @@ const Home = () => {
       <>
         <div className="flex h-[90vh]">
           {/* Sidebar */}
-          <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
+          <aside className="w-[20vw]  bg-[#4a586c] text-white p-6 flex flex-col justify-between">
             <div>
-              <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
+              <h1 className="text-5xl font-bold text-[#c0c0c0] text-center drop-shadow-xl">
                 AVILAMBH
               </h1>
               <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
@@ -214,8 +215,11 @@ const Home = () => {
             </div>
           </aside>
         </div>
-        <div className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto">
-          <div className="bg-slate-500 h-[50vh] w-[60vw] mx-auto mt-4 relative flex p-4">
+        <div
+          className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
+          style={{ backgroundImage: `url(${bg})` }}
+        >
+          <div className="bg-[#e5e9f197] h-[50vh] w-[60vw] mx-auto mt-4 relative flex p-4">
             <img
               src={mapSrc}
               alt="Site Map"
@@ -224,31 +228,31 @@ const Home = () => {
 
             <div className="absolute right-16 top-12 flex flex-col space-y-3">
               <button
-                className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
+                className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600"
                 onClick={() => setMapSrc(map)}
               >
                 Mine 1
               </button>
               <button
-                className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600"
+                className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600"
                 onClick={() => setMapSrc(map2)}
               >
                 Mine 2
               </button>
-              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 3
               </button>
-              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 4
               </button>
-              <button className="w-32 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 5
               </button>
             </div>
           </div>
 
           {/* //job progress */}
-          <div className="w-[60vw] h-[45vh] bg-slate-500 mx-auto my-6 grid grid-cols-5 ">
+          <div className="w-[60vw] h-[45vh] bg-[#3f4143e8] mx-auto my-6 grid grid-cols-5 ">
             <div className="p-6 col-span-2 mx-auto">
               <div className="text-white w-72 left">
                 {selectedJob.id || "job_id"} : {selectedJob.task || "Task"}
@@ -262,18 +266,18 @@ const Home = () => {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-green-500 rounded"></div>
-                  <span className="text-gray-700 text-sm">Completed</span>
+                  <span className="text-white text-sm">Completed</span>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                  <span className="text-gray-700 text-sm">Remaining</span>
+                  <span className="text-white text-sm">Remaining</span>
                 </div>
               </div>
             </div>
 
             <div className="h-[40vh] p-4 col-span-3">
-              <h2 className="text-2xl font-bold mb-4 ">Today's Job Schedule</h2>
+              <h2 className="text-2xl font-bold text-white mb-4 ">Today's Job Schedule</h2>
               <div className="h-[30vh] overflow-y-auto scrollbar-hide">
                 <div className="grid grid-cols-4 gap-4 ">
                   {todayJobs.length > 0 ? (
