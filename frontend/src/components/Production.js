@@ -2,11 +2,11 @@ import React from "react";
 import Footer from "./Footer";
 import axios from "axios";
 import moment from "moment";
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import bg from "../maps/bg.jpg";
 
 const Production = () => {
   const navigate = useNavigate();
@@ -123,9 +123,9 @@ const Production = () => {
     <>
       <div className="flex h-[90vh]">
         {/* Sidebar */}
-        <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
+        <aside className="w-[20vw]  bg-[#4a586c] text-white p-6 flex flex-col justify-between">
           <div>
-            <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
+            <h1 className="text-5xl font-bold text-[#c0c0c0] text-center drop-shadow-xl">
               AVILAMBH
             </h1>
             <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
@@ -170,69 +170,70 @@ const Production = () => {
         </aside>
       </div>
 
-      <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
-        <div className="h-3/4 overflow-y-auto">
-          <table className="w-4/5 mx-auto border border-gray-300 shadow-md ">
-            <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
-              <tr className="text-center">
-                <th className="px-4 py-2">Production ID</th>
-                <th className="px-4 py-2">Mine ID</th>
-                <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2">Quality</th>
-                <th className="px-4 py-2">Quantity</th>
-                {userRole.role !== "owner" && (
-                  <th className="px-4 py-2">Actions</th>
-                )}
-              </tr>
-            </thead>
-            <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
-              {production.map((item) => (
-                <tr key={item.Production_Id} className="text-center">
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.Production_Id}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.Mine_Id}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.Date}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.Quality}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.Quantity}
-                  </td>
+      <div
+        className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto">
+          <h1 className="text-white text-4xl font-semibold text-center">
+            PRODUCTION REPORTS
+          </h1>
+          <div className="h-[55vh] mt-4 overflow-y-auto scrollbar-hide">
+            <table className=" min-w-full shadow-md">
+              <thead className="bg-[#32363a] text-white  uppercase text-left sticky top-0">
+                <tr className="text-center">
+                  <th className="px-4 py-2">Production ID</th>
+                  <th className="px-4 py-2">Mine ID</th>
+                  <th className="px-4 py-2">Date</th>
+                  <th className="px-4 py-2">Quality</th>
+                  <th className="px-4 py-2">Quantity</th>
                   {userRole.role !== "owner" && (
-                    <td className="border border-gray-300 px-4 py-2">
-                      <button
-                        className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
-                        onClick={() => openModal(item)}
-                      >
-                        update
-                      </button>
-                      <button
-                        type="button"
-                        className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
-                        onClick={() => deleteItem(item._id)}
-                      >
-                        Delete
-                      </button>
-                      {/* <button
-                      type="button"
-                        className="px-4 py-1 ml-2 bg-gray-500 rounded-md text-white outline-none"
-                      onClick={() => openAddModal()}
-                    >
-                       Add
-                    </button> */}
-                    </td>
+                    <th className="px-4 py-2">Actions</th>
                   )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide bg-[#fff1fe] ">
+                {production.map((item) => (
+                  <tr key={item.Production_Id} className="text-center">
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.Production_Id}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.Mine_Id}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.Date}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.Quality}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.Quantity}
+                    </td>
+                    {userRole.role !== "owner" && (
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          className="px-4 py-1 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
+                          onClick={() => openModal(item)}
+                        >
+                          update
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-[#365486]  font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
+                          onClick={() => deleteItem(item._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <button
-            className="absolute bottom-6 right-32 bg-gray-500 text-white px-6 py-1 rounded"
+            className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
             onClick={() => openAddModal()}
           >
             Add
@@ -242,7 +243,7 @@ const Production = () => {
       {/* popup form to update*/}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">Update Production</h2>
             <form>
               <label className="block mb-2">Production Id</label>
@@ -291,14 +292,14 @@ const Production = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] rounded-md text-white font-semibold hover:bg-gray-600"
                   onClick={closeModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#123458] rounded-md text-white font-semibold hover:bg-gray-600"
                   onClick={() => updateItem(productionData._id)}
                 >
                   Save
@@ -311,7 +312,7 @@ const Production = () => {
       {/* popup form to add */}
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">ADD Production</h2>
             <form>
               <label className="block mb-2">Mine Id</label>
@@ -349,14 +350,14 @@ const Production = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={closeAddModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={addProduction}
                 >
                   Add

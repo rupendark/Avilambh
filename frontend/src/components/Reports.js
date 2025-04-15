@@ -201,7 +201,7 @@ const Reports = () => {
           </h1>
           <div className="h-[55vh] mt-4 overflow-y-auto scrollbar-hide">
             <table className=" min-w-full shadow-md">
-              <thead className="bg-[#32363a] text-white  uppercase text-left sticky top-0">
+              <thead className="bg-[#32363a] text-white uppercase text-left sticky top-0">
                 <tr className="text-center">
                   <th className="px-4 py-2">report_id</th>
                   <th className="px-4 py-2">mine_id</th>
@@ -336,7 +336,7 @@ const Reports = () => {
                   className="w-[40%] p-2 border rounded mb-4"
                 />
               </div>
-              <label className="block mb-2">Findings</label>
+              <label className="block mb-2 font-semibold text-lg">Findings</label>
               <input
                 name="inspected_by"
                 type="text"
@@ -344,7 +344,7 @@ const Reports = () => {
                 onChange={handleUpdate}
                 className="w-full p-2 border rounded mb-4"
               />
-              <label className="block mb-2">Recommendations</label>
+              <label className="block mb-2 font-semibold text-lg">Recommendations</label>
               <input
                 name="inspected_by"
                 type="text"
@@ -402,7 +402,7 @@ const Reports = () => {
                   onChange={handleView}
                 />
               </div>
-              <label className="block mb-2">Findings</label>
+              <label className="block mb-2 font-semibold text-lg">Findings</label>
               <input
                 name="findings"
                 type="text"
@@ -410,7 +410,7 @@ const Reports = () => {
                 value={newItem.findings}
                 onChange={handleView}
               />
-              <label className="block mb-2">recommendations</label>
+              <label className="block mb-2 font-semibold text-lg">recommendations</label>
               <input
                 name="recommendations"
                 type="text"
@@ -418,7 +418,7 @@ const Reports = () => {
                 value={newItem.recommendations}
                 onChange={handleView}
               />
-              <label className="block mb-2">Inspected By</label>
+              <label className="block mb-2 font-semibold text-lg">Inspected By</label>
               <input
                 name="inspected_by"
                 type="text"
@@ -429,14 +429,14 @@ const Reports = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white font-semibold hover:bg-gray-600"
+                  className="px-4 py-2 bg-[#365486] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={closeAddModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-500 rounded-md text-white font-semibold hover:bg-gray-600"
+                  className="px-4 py-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={addSMP}
                 >
                   Add

@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import bg from "../maps/bg.jpg";
 
 const Saftey = () => {
   const navigate = useNavigate();
@@ -99,9 +100,9 @@ const Saftey = () => {
     <>
       <div className="flex h-[90vh]">
         {/* Sidebar */}
-        <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
+        <aside className="w-[20vw]  bg-[#4a586c] text-white p-6 flex flex-col justify-between">
           <div>
-            <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
+            <h1 className="text-5xl font-bold text-[#c0c0c0] text-center drop-shadow-xl">
               AVILAMBH
             </h1>
             <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
@@ -145,14 +146,18 @@ const Saftey = () => {
           </div>
         </aside>
       </div>
-      <div className="w-[80vw] h-[85vh] fixed  top-0 right-0">
-        <div className="p-4 bg-gray-200">
-          <div className="p-4 w-5/6 h-[75vh]  bg-gray-500 mx-auto">
-            <h1 className="text-white text-xl">Safety drills/trainings</h1>
-            <div className="h-4/5 overflow-y-auto scrollbar-hide mt-4">
-              <table className=" p-3 min-w-full bg-white">
-                <thead className="bg-gray-400">
-                  <tr className="bg-gray-400 text-center w-auto">
+      <div
+              className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
+              style={{ backgroundImage: `url(${bg})` }}
+            >
+          <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto">
+            <h1 className="text-white text-4xl font-semibold text-center">
+              Safety Drills
+            </h1>
+            <div className="h-[55vh] mt-4 overflow-y-auto scrollbar-hide">
+            <table className=" min-w-full shadow-md">
+                <thead className="bg-[#32363a]">
+                  <tr className="bg-[#32363a] text-center w-auto">
                     <th className="text-white border p-2">Drill_ID</th>
                     <th className="text-white border p-2">training_type</th>
                     <th className="text-white border p-2">Scheduled Date</th>
@@ -162,7 +167,7 @@ const Saftey = () => {
                     )}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide bg-[#fff1fe] ">
                   {drills.map((item) => (
                     <tr
                       key={item.drill_id}
@@ -177,14 +182,14 @@ const Saftey = () => {
                       {userRole.role !== "owner" && (
                         <td className="border border-gray-300 px-4 py-2">
                           <button
-                            className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
+                            className="px-4 py-1 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
                             onClick={() => openModal(item)}
                           >
                             update
                           </button>
                           <button
                             type="button"
-                            className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
+                            className="px-4 py-1 ml-2 bg-[#365486]  font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
                             // onClick={() => deleteItem(item._id)}
                           >
                             Delete
@@ -198,34 +203,45 @@ const Saftey = () => {
             </div>
           </div>
           {userRole.role !== "owner" && (
-            <div className="flex space-x-4 justify-end p-4">
-              <button
-                type="button"
-                className="px-6 py-2 bg-gray-800 text-white rounded-lg "
-                onClick={openAddModal}
-              >
-                Add
-              </button>
-            </div>
+            <button
+              className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
+              onClick={openAddModal}
+            >
+              Add
+            </button>
           )}
         </div>
-      </div>
 
       {/* popup form to update or delete*/}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 h-2/4  overflow-y-auto scrollbar-hide">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg w-1/3 overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">Update Drill</h2>
             <form>
-              <label className="block mb-2">Drill_id</label>
-              <input
-                name="drill_id"
-                type="text"
-                defaultValue={selectedItem?.drill_id}
-                className="w-full p-2 border rounded mb-4"
-                readOnly="readonly"
-              />
-              <label className="block mb-2">Type</label>
+              <div className="flex">
+                <label className="block mb-2 mt-2 mr-8 text-lg font-semibold">
+                  Drill_id
+                </label>
+                <input
+                  name="drill_id"
+                  type="text"
+                  defaultValue={selectedItem?.drill_id}
+                  className="w-[30%] p-2 border rounded mb-4"
+                  readOnly="readonly"
+                />
+                <label className="block mb-2 mt-2 mr-8 ml-4 text-lg font-semibold">
+                  Date
+                </label>
+                <input
+                  name="scheduled_date"
+                  type="date"
+                  onChange={handleChange2}
+                  defaultValue={selectedItem?.scheduled_date.slice(0, 10)}
+                  className="w-[30%] p-2 border rounded mb-4"
+                />
+              </div>
+
+              <label className="block mb-2 font-semibold">Type</label>
               <input
                 name="training_type"
                 type="text"
@@ -233,15 +249,8 @@ const Saftey = () => {
                 defaultValue={selectedItem?.training_type}
                 className="w-full p-2 border rounded mb-4"
               />
-              <label className="block mb-2">Date</label>
-              <input
-                name="scheduled_date"
-                type="date"
-                onChange={handleChange2}
-                defaultValue={selectedItem?.scheduled_date.slice(0, 10)}
-                className="w-full p-2 border rounded mb-4"
-              />
-              <label className="block mb-2">Incharge</label>
+
+              <label className="block mb-2 font-semibold">Incharge</label>
               <input
                 name="incharge"
                 type="text"
@@ -252,14 +261,14 @@ const Saftey = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={closeModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={() => updateDrills(selectedItem._id)}
                 >
                   Save
@@ -273,10 +282,10 @@ const Saftey = () => {
       {/* popup form to add */}
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
-              <label className="block mb-2">Type</label>
+              <label className="block mb-2 font-semibold">Type</label>
               <input
                 name="training_type"
                 type="text"
@@ -284,7 +293,7 @@ const Saftey = () => {
                 onChange={handleChange}
                 value={newItem.training_type}
               />
-              <label className="block mb-2">Date</label>
+              <label className="block mb-2 font-semibold">Date</label>
               <input
                 name="scheduled_date"
                 type="date"
@@ -292,7 +301,7 @@ const Saftey = () => {
                 onChange={handleChange}
                 value={newItem.scheduled_date}
               />
-              <label className="block mb-2">Incharge</label>
+              <label className="block mb-2 font-semibold">Incharge</label>
               <input
                 name="incharge"
                 type="text"
@@ -304,14 +313,14 @@ const Saftey = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={closeAddModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={addDrills}
                 >
                   Add

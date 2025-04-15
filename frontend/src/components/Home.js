@@ -228,24 +228,24 @@ const Home = () => {
 
             <div className="absolute right-16 top-12 flex flex-col space-y-3">
               <button
-                className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600"
+                className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600"
                 onClick={() => setMapSrc(map)}
               >
                 Mine 1
               </button>
               <button
-                className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600"
+                className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600"
                 onClick={() => setMapSrc(map2)}
               >
                 Mine 2
               </button>
-              <button className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 3
               </button>
-              <button className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 4
               </button>
-              <button className="w-32 py-2 bg-[#424769] text-white rounded-lg shadow-md hover:bg-blue-600">
+              <button className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600">
                 Mine 5
               </button>
             </div>

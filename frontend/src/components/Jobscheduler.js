@@ -154,19 +154,19 @@ const Jobscheduler = () => {
     <>
       <div className="flex h-[90vh]">
         {/* Sidebar */}
-        <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
+        <aside className="w-[20vw]  bg-[#4a586c] text-white p-6 flex flex-col justify-between">
           <div>
-            <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
+            <h1 className="text-5xl font-bold text-[#c0c0c0] text-center drop-shadow-xl">
               AVILAMBH
             </h1>
             <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
-              <Link
-                to="/home"
-                className="block text-gray-300  hover:shadow-xl"
-              >
+              <Link to="/home" className="block text-gray-300  hover:shadow-xl">
                 HOME
               </Link>
-              <Link to="/Jobs" className="block text-white hover:text-white text-[26px] shadow-xl">
+              <Link
+                to="/Jobs"
+                className="block text-white hover:text-white text-[26px] shadow-xl"
+              >
                 JOB SCHEDULE
               </Link>
               <Link
@@ -211,7 +211,13 @@ const Jobscheduler = () => {
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: "100%" }}
+            // style={{ height: "100%" }}
+            style={{
+              height: "100%",
+              border: "px solid #ccc", // Add your border style here
+              borderRadius: "8px", // Optional: adds rounded corners
+              padding: "10px", // Optional: inner spacing
+            }}
             eventPropGetter={getEventStyle}
             defaultView={Views.WEEK}
             views={["month", "week", "day"]}
@@ -228,7 +234,7 @@ const Jobscheduler = () => {
 
         {userRole.role !== "owner" && (
           <button
-            className="absolute bottom-0 right-16 bg-blue-500 text-white px-6 py-1 rounded"
+            className="absolute bottom-0 right-16 px-4 py-2  bg-gray-500 font-semibold hover:bg-gray-600 rounded-md text-white"
             onClick={openAddModal}
           >
             ADD
@@ -239,27 +245,58 @@ const Jobscheduler = () => {
       {/* popup form to update or delete*/}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 h-2/4  overflow-y-auto scrollbar-hide">
+          <div className="p-6 bg-gray-300 shadow-lg border-8  h-2/3  border-gray-600 w-2/4  overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">Update Task</h2>
-            <form>
-              <label className="block mb-2">Job_id</label>
-              <input
-                name="job_id"
-                type="text"
-                defaultValue={selectedItem?.id}
-                className="w-full p-2 border rounded mb-4"
-                readOnly="readonly"
-              />
-              <label className="block mb-2">SMP</label>
-              <input
-                name="smp_id"
-                type="text"
-                onChange={handleChange2}
-                defaultValue={selectedItem?.smp_id}
-                className="w-full p-2 border rounded mb-4"
-              />
 
-              <label className="block mb-2">Batch</label>
+            <form>
+              <div className="flex">
+                <label className="block mb-2 mt-2 mr-8 font-semibold">
+                  Job_id
+                </label>
+                <input
+                  name="job_id"
+                  type="text"
+                  defaultValue={selectedItem?.id}
+                  className="w-[35%] p-2 border rounded mb-4"
+                  readOnly="readonly"
+                />
+                <label className="block mb-2 mt-2 mr-10 ml-4 font-semibold">
+                  SMP
+                </label>
+                <input
+                  name="smp_id"
+                  type="text"
+                  onChange={handleChange2}
+                  defaultValue={selectedItem?.smp_id}
+                  className="w-[35%] p-2 border rounded mb-4"
+                />
+              </div>
+
+              <div className="flex">
+                <label className="block mb-2 mt-2 mr-2 font-semibold">
+                  StartTime
+                </label>
+                <input
+                  name="start_time"
+                  type="datetime-local"
+                  onChange={handleChange2}
+                  min={new Date().toISOString().slice(0, 16)}
+                  value={selectedItem?.start_time}
+                  className="w-[35%] p-2 border rounded mb-4"
+                />
+                <label className="block mb-2 mt-2 mr-2 ml-4  font-semibold">
+                  EndTime
+                </label>
+                <input
+                  name="end_time"
+                  type="datetime-local"
+                  onChange={handleChange2}
+                  min={selectedItem.start_time}
+                  value={selectedItem?.end_time}
+                  className="w-[35%] p-2 border rounded mb-4"
+                />
+              </div>
+              <label className="block mb-2 font-semibold">Batch</label>
               <input
                 name="batch"
                 type="text"
@@ -267,26 +304,7 @@ const Jobscheduler = () => {
                 defaultValue={selectedItem?.batch}
                 className="w-full p-2 border rounded mb-4"
               />
-
-              <label className="block mb-2">StartTime</label>
-              <input
-                name="start_time"
-                type="datetime-local"
-                onChange={handleChange2}
-                min={new Date().toISOString().slice(0, 16)}
-                value={selectedItem?.start_time}
-                className="w-full p-2 border rounded mb-4"
-              />
-              <label className="block mb-2">EndTime</label>
-              <input
-                name="end_time"
-                type="datetime-local"
-                onChange={handleChange2}
-                min={selectedItem.start_time}
-                value={selectedItem?.end_time}
-                className="w-full p-2 border rounded mb-4"
-              />
-              <label className="block mb-2">Task</label>
+              <label className="block mb-2 font-semibold">Task</label>
               <input
                 name="task"
                 type="String"
@@ -295,10 +313,10 @@ const Jobscheduler = () => {
                 className="w-full p-2 border rounded mb-4"
               />
 
-              <div className="flex justify-end space-x-2">
+              <div className="flex justify-end space-x-2 mt-6">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-1 ml-2 bg-[#365486]  font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
                   onClick={closeModal}
                 >
                   Cancel
@@ -307,14 +325,14 @@ const Jobscheduler = () => {
                   <>
                     <button
                       type="button"
-                      className="px-4 py-2 bg-red-600 rounded-md text-white"
+                      className="px-4 py-1 ml-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
                       onClick={() => deleteJob(selectedItem.id)}
                     >
                       delete
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                      className="px-4 py-1 ml-2 bg-[#123458] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
                       onClick={() => updateJob(selectedItem.id)}
                     >
                       Save
@@ -330,10 +348,18 @@ const Jobscheduler = () => {
       {/* popup form to add */}
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Add New Task</h2>
             <form>
-              <label className="block mb-2">Task</label>
+              <label className="block mb-2 font-semibold text-lg">SMP ID</label>
+              <input
+                name="smp_id"
+                type="string"
+                className="w-full p-2 border rounded mb-4"
+                onChange={handleChange}
+                value={newItem.smp_id}
+              />
+              <label className="block mb-2 font-semibold text-lg">Task</label>
               <input
                 name="task"
                 type="text"
@@ -341,7 +367,7 @@ const Jobscheduler = () => {
                 onChange={handleChange}
                 value={newItem.task}
               />
-              <label className="block mb-2">Start time</label>
+              <label className="block mb-2 font-semibold text-lg">Start time</label>
               <input
                 name="start_time"
                 type="datetime-local"
@@ -350,7 +376,7 @@ const Jobscheduler = () => {
                 min={new Date().toISOString().slice(0, 16)}
                 value={newItem.start_time}
               />
-              <label className="block mb-2">end time</label>
+              <label className="block mb-2 font-semibold text-lg">End time</label>
               <input
                 name="end_time"
                 type="datetime-local"
@@ -359,7 +385,7 @@ const Jobscheduler = () => {
                 min={newItem.start_time}
                 value={newItem.end_time}
               />
-              <label className="block mb-2">batch</label>
+              <label className="block mb-2 font-semibold text-lg">Batch</label>
               <input
                 name="batch"
                 type="string"
@@ -367,26 +393,18 @@ const Jobscheduler = () => {
                 onChange={handleChange}
                 value={newItem.batch}
               />
-              <label className="block mb-2">SMP ID</label>
-              <input
-                name="smp_id"
-                type="string"
-                className="w-full p-2 border rounded mb-4"
-                onChange={handleChange}
-                value={newItem.smp_id}
-              />
 
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={closeAddModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={addJob}
                 >
                   Add

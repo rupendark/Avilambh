@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import bg from "../maps/bg.jpg";
 
 const Inventory = () => {
   const navigate = useNavigate();
@@ -108,9 +109,9 @@ const Inventory = () => {
     <>
       <div className="flex h-[90vh]">
         {/* Sidebar */}
-        <aside className="w-[20vw]  bg-[#86afe7] text-white p-6 flex flex-col justify-between">
+        <aside className="w-[20vw]  bg-[#4a586c] text-white p-6 flex flex-col justify-between">
           <div>
-            <h1 className="text-5xl font-bold text-[#123458] text-center drop-shadow-xl">
+            <h1 className="text-5xl font-bold text-[#c0c0c0] text-center drop-shadow-xl">
               AVILAMBH
             </h1>
             <nav className="text-[18px] font-bold mt-6 font-sans  space-y-4 pt-24 pl-8  hover:text-white ">
@@ -154,59 +155,67 @@ const Inventory = () => {
           </div>
         </aside>
       </div>
-      <div className="w-[80vw] h-[85vh] absolute top-0 right-0 mt-4">
-        <div className="h-3/4 overflow-y-auto scrollbar-hide">
-          <table className="w-4/5 mx-auto border border-gray-300 divide-y divide-gray-200 shadow-lg rounded-xl overflow-hidden">
-            <thead className="bg-gray-700 text-white  uppercase text-left sticky top-0 z-5">
-              <tr className="text-center">
-                <th className="px-4 py-2">ID</th>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Quantity</th>
-                <th className="px-4 py-2">Reorder Level</th>
-                {userRole.role !== "owner" && (
-                  <th className="px-4 py-2">Action</th>
-                )}
-              </tr>
-            </thead>
-            <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide">
-              {inventory.map((item) => (
-                <tr key={item.Inventory_Id} className="text-center">
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.Inventory_Id}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.item_name}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.quantity}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.reorder_level}
-                  </td>
+      <div
+        className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto">
+          <h1 className="text-white text-4xl font-semibold text-center">
+            INVENTORY
+          </h1>
+          <div className="h-[55vh] mt-4 overflow-y-auto scrollbar-hide">
+            <table className=" min-w-full shadow-md">
+              <thead className="bg-[#32363a] text-white  uppercase text-left sticky top-0">
+                <tr className="text-center">
+                  <th className="px-4 py-2">ID</th>
+                  <th className="px-4 py-2">Name</th>
+                  <th className="px-4 py-2">Quantity</th>
+                  <th className="px-4 py-2">Reorder Level</th>
                   {userRole.role !== "owner" && (
-                    <td className="border border-gray-300 px-4 py-2">
-                      <button
-                        className="px-4 py-1 bg-[#ff2188] rounded-md text-white outline-none"
-                        onClick={() => openModal(item)}
-                      >
-                        update
-                      </button>
-                      <button
-                        type="button"
-                        className="px-4 py-1 ml-2 bg-red-500 rounded-md text-white outline-none"
-                        onClick={() => deleteItem(item._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
+                    <th className="px-4 py-2">Action</th>
                   )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide bg-[#fff1fe] ">
+                {inventory.map((item) => (
+                  <tr key={item.Inventory_Id} className="text-center">
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.Inventory_Id}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.item_name}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.quantity}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {item.reorder_level}
+                    </td>
+                    {userRole.role !== "owner" && (
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          className="px-4 py-1 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
+                          onClick={() => openModal(item)}
+                        >
+                          update
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-[#365486]  font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
+                          onClick={() => deleteItem(item._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {userRole.role !== "owner" && (
             <button
-              className="absolute bottom-6 right-32 bg-blue-500 text-white px-6 py-1 rounded"
+              className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
               onClick={() => openAddModal()}
             >
               Add
@@ -218,7 +227,7 @@ const Inventory = () => {
       {/* popup form to update or delete*/}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">Update Inventory</h2>
             <form>
               <label className="block mb-2">Item Id</label>
@@ -258,14 +267,14 @@ const Inventory = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] rounded-md text-white font-semibold hover:bg-gray-600"
                   onClick={closeModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-blue-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#123458] rounded-md text-white font-semibold hover:bg-gray-600"
                   onClick={() => updateItem(selectedItem._id)}
                 >
                   Save
@@ -279,7 +288,7 @@ const Inventory = () => {
       {/* popup form to add */}
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
             <h2 className="text-xl font-bold mb-4">Add New Item</h2>
             <form>
               <label className="block mb-2">Item Name</label>
@@ -309,14 +318,14 @@ const Inventory = () => {
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-400 rounded-md text-white"
+                  className="px-4 py-2 bg-[#365486] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={closeAddModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 bg-green-600 rounded-md text-white"
+                  className="px-4 py-2 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white"
                   onClick={addInventory}
                 >
                   Add
