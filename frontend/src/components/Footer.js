@@ -52,7 +52,7 @@ const Footer = () => {
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div className="bg-gray-300 p-6 rounded-sm shadow-lg text-center border-8 border-gray-600">
             <p className="mb-4 text-lg font-semibold">
               Logout from the System?
             </p>

@@ -159,7 +159,7 @@ const Inventory = () => {
         className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
         style={{ backgroundImage: `url(${bg})` }}
       >
-        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto">
+        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto border-2">
           <h1 className="text-white text-4xl font-semibold text-center">
             INVENTORY
           </h1>

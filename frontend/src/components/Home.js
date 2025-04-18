@@ -215,11 +215,13 @@ const Home = () => {
             </div>
           </aside>
         </div>
+
+        
         <div
           className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
           style={{ backgroundImage: `url(${bg})` }}
         >
-          <div className="bg-[#e5e9f197] h-[50vh] w-[60vw] mx-auto mt-4 relative flex p-4">
+          <div className="bg-[#e5e9f197] h-[50vh] w-[60vw] mx-auto mt-4 relative flex p-4 border-8 border-[#3f4143e8]">
             <img
               src={mapSrc}
               alt="Site Map"
@@ -228,7 +230,7 @@ const Home = () => {
 
             <div className="absolute right-16 top-12 flex flex-col space-y-3">
               <button
-                className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600"
+                className="w-32 py-2 bg-[#3a3b44] text-white rounded-lg shadow-md hover:bg-blue-600  "
                 onClick={() => setMapSrc(map)}
               >
                 Mine 1
@@ -252,7 +254,7 @@ const Home = () => {
           </div>
 
           {/* //job progress */}
-          <div className="w-[60vw] h-[45vh] bg-[#3f4143e8] mx-auto my-6 grid grid-cols-5 ">
+          <div className="w-[60vw] h-[45vh] bg-[#3f4143e8] mx-auto my-6 grid grid-cols-5 border-8 border-[#e5e9f197]">
             <div className="p-6 col-span-2 mx-auto">
               <div className="text-white w-72 left">
                 {selectedJob.id || "job_id"} : {selectedJob.task || "Task"}

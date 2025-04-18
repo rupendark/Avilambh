@@ -1,6 +1,5 @@
 const express = require("express");
 const User = require("../model/userSchema");
-const { generateToken } = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 
@@ -22,18 +21,10 @@ router.post("/login", async (req, res) => {
     if (createUser) {
       createUser.password === password
         ? console.log("pass match")
-        : res.json({ status: 401, message: "Invalid Password" });
-    } else {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      console.log(hashedPassword);
-      createUser = new User({ email, password: hashedPassword });
-      console.log(createUser);
-      await createUser.save();
-    }
-
+        :  res.json({ status: 401, message: "Invalid Password" });
+    } 
     const userdata = await User.find({ email });
 
-    // const token = generateToken(userdata);
     res.cookie("jwtToken", userdata, {
       httpOnly: false,
       secure: false,

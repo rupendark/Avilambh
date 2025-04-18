@@ -178,7 +178,7 @@ const Transport = () => {
         style={{ backgroundImage: `url(${bg})` }}
       >
         {/* scheduled transport */}
-        <div className="p-4 w-5/6 h-[45vh] bg-[#46505af5] mx-auto mt-12">
+        <div className="p-4 w-5/6 h-[51vh] border-2 border-white bg-[#46505af5] mx-auto mt-5">
           <div>
             <h1 className="text-white text-3xl font-semibold text-center">
               Schedule Transport
@@ -256,7 +256,7 @@ const Transport = () => {
         </div>
 
         {/* completed transports*/}
-        <div className="p-4 pt-2 w-5/6 h-60  bg-[#46505af5] mx-auto">
+        <div className="p-4 pt-2 w-5/6 h-60 border-2 border-white mt-2 bg-[#46505af5] mx-auto">
           <h1 className="text-white text-3xl font-semibold text-center">
             Completed Transport
           </h1>
