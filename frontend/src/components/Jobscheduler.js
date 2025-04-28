@@ -13,6 +13,7 @@ const localizer = momentLocalizer(moment);
 const Jobscheduler = () => {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
+  const [smp, setSmp] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -25,6 +26,16 @@ const Jobscheduler = () => {
   });
   const [date, setDate] = useState(new Date());
   const [userRole, setUserRole] = useState({ role: "" });
+  const batches = [1, 2, 3];
+  const tasks = [
+    "Drilling",
+    "Dust Control",
+    "Blasting",
+    "Excavation",
+    "Loading",
+    "Water Spraying",
+    "Supervision",
+  ];
 
   useEffect(() => {
     axios
@@ -34,6 +45,17 @@ const Jobscheduler = () => {
       })
       .catch((error) => {
         console.error("Error fetching job data:", error);
+      });
+
+    axios
+      .get("http://localhost:5000/reports", {
+        withCredentials: true, // ✅ Important: Send cookies
+      }) // Update if deployed
+      .then((response) => {
+        setSmp(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching inventory data:", error);
       });
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
@@ -246,7 +268,9 @@ const Jobscheduler = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
           <div className="p-6 bg-gray-300 shadow-lg border-8  h-2/3  border-gray-600 w-2/4  overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4">Update Task</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">
+              Update Task
+            </h2>
 
             <form>
               <div className="flex">
@@ -263,13 +287,17 @@ const Jobscheduler = () => {
                 <label className="block mb-2 mt-2 mr-10 ml-4 font-semibold">
                   SMP
                 </label>
-                <input
+                <select
                   name="smp_id"
                   type="text"
-                  onChange={handleChange2}
-                  defaultValue={selectedItem?.smp_id}
                   className="w-[35%] p-2 border rounded mb-4"
-                />
+                  defaultValue={selectedItem?.smp_id}
+                  onChange={handleChange2}
+                >
+                  {smp.map((item) => (
+                    <option value={item.report_id}>{item.report_id}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex">
@@ -297,21 +325,30 @@ const Jobscheduler = () => {
                 />
               </div>
               <label className="block mb-2 font-semibold">Batch</label>
-              <input
+              <select
                 name="batch"
                 type="text"
+                className="w-full p-2 border rounded mb-4"
                 onChange={handleChange2}
                 defaultValue={selectedItem?.batch}
-                className="w-full p-2 border rounded mb-4"
-              />
+              >
+                {batches.map((item) => (
+                  <option value={item}>Batch {item}</option>
+                ))}
+              </select>
+
               <label className="block mb-2 font-semibold">Task</label>
-              <input
+              <select
                 name="task"
-                type="String"
+                type="text"
+                className="w-full p-2 border rounded mb-4"
                 onChange={handleChange2}
                 defaultValue={selectedItem?.task}
-                className="w-full p-2 border rounded mb-4"
-              />
+              >
+                {tasks.map((item) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </select>
 
               <div className="flex justify-end space-x-2 mt-6">
                 <button
@@ -349,25 +386,38 @@ const Jobscheduler = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-xl font-bold mb-4">Add New Task</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">
+              Add New Task
+            </h2>
             <form>
               <label className="block mb-2 font-semibold text-lg">SMP ID</label>
-              <input
+              <select
                 name="smp_id"
                 type="string"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
-                value={newItem.smp_id}
-              />
+              >
+                <option value="">--Select SMP report--</option>
+                {smp.map((item) => (
+                  <option value={item.report_id}>{item.report_id}</option>
+                ))}
+              </select>
               <label className="block mb-2 font-semibold text-lg">Task</label>
-              <input
+              <select
                 name="task"
                 type="text"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
                 value={newItem.task}
-              />
-              <label className="block mb-2 font-semibold text-lg">Start time</label>
+              >
+                <option value="">--Select task--</option>
+                {tasks.map((item) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </select>
+              <label className="block mb-2 font-semibold text-lg">
+                Start time
+              </label>
               <input
                 name="start_time"
                 type="datetime-local"
@@ -376,7 +426,9 @@ const Jobscheduler = () => {
                 min={new Date().toISOString().slice(0, 16)}
                 value={newItem.start_time}
               />
-              <label className="block mb-2 font-semibold text-lg">End time</label>
+              <label className="block mb-2 font-semibold text-lg">
+                End time
+              </label>
               <input
                 name="end_time"
                 type="datetime-local"
@@ -386,13 +438,17 @@ const Jobscheduler = () => {
                 value={newItem.end_time}
               />
               <label className="block mb-2 font-semibold text-lg">Batch</label>
-              <input
+              <select
                 name="batch"
                 type="string"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
-                value={newItem.batch}
-              />
+              >
+                <option value="">--Select batch--</option>
+                {batches.map((item) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </select>
 
               <div className="flex justify-end space-x-2">
                 <button

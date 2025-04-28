@@ -11,6 +11,7 @@ import bg from "../maps/bg.jpg";
 const Production = () => {
   const navigate = useNavigate();
   const [production, setProduction] = useState([]);
+  const [mine, setMine] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userRole, setUserRole] = useState({ role: "" });
@@ -22,21 +23,34 @@ const Production = () => {
     Quality: "",
   });
   const [newItem, setNewItem] = useState({
-    // production_id: "",
-    mine_id: "",
-    date: "",
-    quantity: "",
-    quality: "",
+    Mine_id: "",
+    Date: "",
+    Quantity: "",
+    Quality: "",
   });
   const today = moment().format("YYYY-MM-DD");
+
   // Handle Production Add
   const handleView = (e) => {
-    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "Quantity") {
+      const numericValue = Math.min(4000, Number(value));
+      setNewItem({ ...newItem, [name]: numericValue });
+    } else {
+      setNewItem({ ...newItem, [name]: value });
+    }
   };
 
   //Handle input change for update
   const handleProductionUpdate = (e) => {
-    setProductionData({ ...productionData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "Quantity") {
+      const numericValue = Math.min(4000, Number(value));
+      setProductionData({ ...productionData, [name]: numericValue });
+    } else {
+      setProductionData({ ...productionData, [e.target.name]: e.target.value });
+    }
+    
   };
 
   useEffect(() => {
@@ -50,6 +64,18 @@ const Production = () => {
       .catch((error) => {
         console.error("Error fetching production data:", error);
       });
+    axios
+      .get("http://localhost:5000/mine", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setMine(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Mine info:", error);
+      });
+    console.log(mine);
+
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
     const { role } = parsedData[0];
@@ -72,6 +98,9 @@ const Production = () => {
   // popup ADD Production functions
   const openAddModal = () => {
     setIsAddModalOpen(true);
+    setNewItem({
+      Date: today,
+    });
   };
 
   const closeAddModal = () => {
@@ -244,7 +273,7 @@ const Production = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4">Update Production</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Production</h2>
             <form>
               <label className="block mb-2">Production Id</label>
               <input
@@ -254,17 +283,22 @@ const Production = () => {
                 readOnly="readonly"
               />
               <label className="block mb-2">Mine Id</label>
-              <input
-                name="mine_id"
+              <select
+                name="Mine_Id"
                 type="text"
+                className="w-full p-2 border rounded mb-4"
                 defaultValue={productionData?.Mine_Id}
                 onChange={handleProductionUpdate}
-                className="w-full p-2 border rounded mb-4"
-              />
+              >
+                {/* <option value="">--Please choose an option--</option> */}
+                {mine.map((item) => (
+                  <option value={item.Mine_Id}>{item.Mine_Id}</option>
+                ))}
+              </select>
 
               <label className="block mb-2">Date</label>
               <input
-                name="date"
+                name="Date"
                 type="date"
                 defaultValue={productionData?.Date}
                 onChange={handleProductionUpdate}
@@ -272,19 +306,22 @@ const Production = () => {
               />
 
               <label className="block mb-2">Quality</label>
-              <input
-                name="quality"
-                type="text"
+              <select
+                name="Quality"
+                className="w-full p-2 border rounded mb-4"
                 defaultValue={productionData?.Quality}
                 onChange={handleProductionUpdate}
-                className="w-full p-2 border rounded mb-4"
-              />
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
 
-              <label className="block mb-2">Quantity</label>
+              <label className="block mb-2">Quantity (max 4000 tns)</label>
               <input
-                name="quantity"
+                name="Quantity"
                 type="text"
-                defaultValue={productionData?.Quantity}
+                value={productionData?.Quantity}
                 onChange={handleProductionUpdate}
                 className="w-full p-2 border rounded mb-4"
               />
@@ -309,42 +346,51 @@ const Production = () => {
           </div>
         </div>
       )}
+
       {/* popup form to add */}
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4">ADD Production</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">ADD Production</h2>
             <form>
               <label className="block mb-2">Mine Id</label>
-              <input
-                name="mine_id"
-                type="text"
+              <select
+                name="Mine_id"
                 className="w-full p-2 border rounded mb-4"
-                value={newItem.mine_id}
                 onChange={handleView}
-              />
+              >
+                <option value="">--Select Mine--</option>
+                {mine.map((item) => (
+                  <option value={item.Mine_Id}>{item.Mine_Id}</option>
+                ))}
+              </select>
+
               <label className="block mb-2">Date</label>
               <input
-                name="date"
+                name="Date"
                 type="date"
                 className="w-full p-2 border rounded mb-4"
                 value={today}
                 onChange={handleView}
               />
               <label className="block mb-2">Quality</label>
-              <input
-                name="quality"
-                type="text"
+              <select
+                name="Quality"
                 className="w-full p-2 border rounded mb-4"
-                value={newItem.quality}
                 onChange={handleView}
-              />
-              <label className="block mb-2">Quantity</label>
+              >
+                <option value="">-- Select Quality --</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+              <label className="block mb-2">Quantity (max: 4000 tns)</label>
               <input
-                name="quantity"
+                name="Quantity"
                 type="number"
+                min="0"
                 className="w-full p-2 border rounded mb-4"
-                value={newItem.quantity}
+                value={newItem.Quantity}
                 onChange={handleView}
               />
               <div className="flex justify-end space-x-2">

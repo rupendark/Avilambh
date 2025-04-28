@@ -21,7 +21,17 @@ const Inventory = () => {
 
   // Handle input change
   const handleChange = (e) => {
-    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+    // setNewItem({ ...newItem, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "reorder_level") {
+      if (Number(value) >= Number(newItem.quantity)) {
+        setNewItem({ ...newItem, [name]: newItem.quantity });
+      } else {
+        setNewItem({ ...newItem, [name]: value });
+      }
+    } else {
+      setNewItem({ ...newItem, [name]: value });
+    }
   };
   //Handle input change fr update
   const handleChange2 = (e) => {
@@ -185,7 +195,22 @@ const Inventory = () => {
                     <td className="border border-gray-300 px-4 py-2">
                       {item.item_name}
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    {/* <td className="border border-gray-300 px-4 py-2">
+                      {item.quantity}
+                    </td> */}
+                    <td
+                      className={`border border-gray-300 px-4 py-2 
+                        ${
+                          item.quantity < item.reorder_level
+                            ? "bg-red-400"
+                            : item.quantity <=
+                              Number(item.reorder_level) +
+                                item.reorder_level / 3
+                            ? "bg-yellow-300"
+                            : ""
+                        }
+                      `}
+                    >
                       {item.quantity}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
@@ -212,6 +237,19 @@ const Inventory = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="flex items-center space-x-4 mt-4 ml-4">
+            {/* Complete Block */}
+            <div className="flex items-center space-x-2">
+              <div className="w-[20px] h-[20px] bg-yellow-300"></div>
+              <span className="text-sm font-medium ">Near Reorder Level</span>
+            </div>
+
+            {/* Incomplete Block */}
+            <div className="flex items-center space-x-2">
+              <div className="w-[20px] h-[20px] bg-red-400"></div>
+              <span className="text-sm font-medium">Below Reorder Level</span>
+            </div>
           </div>
           {userRole.role !== "owner" && (
             <button

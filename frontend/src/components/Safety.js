@@ -9,6 +9,7 @@ import bg from "../maps/bg.jpg";
 const Saftey = () => {
   const navigate = useNavigate();
   const [drills, setDrills] = useState([]);
+  const [employee, setEmployee] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -31,6 +32,15 @@ const Saftey = () => {
       .catch((error) => {
         console.error("Error fetching transport data:", error);
       });
+
+    axios
+      .get("http://localhost:5000/employee", {}) // Update if deployed
+      .then((response) => {
+        setEmployee(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching transport data:", error);
+      });
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
     const { role } = parsedData[0];
@@ -39,6 +49,7 @@ const Saftey = () => {
     });
   }, []);
 
+  const Incharge = employee.filter((item) => item.Role === "Drill_Incharge");
   // Handle input change fr add
   const handleChange = (e) => {
     setNewItem({ ...newItem, [e.target.name]: e.target.value });
@@ -95,6 +106,14 @@ const Saftey = () => {
       console.error("Error updating item:", error);
     }
   };
+  const deleteItem = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/safety/delete/${id}`);
+      navigate(0);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
 
   return (
     <>
@@ -147,76 +166,76 @@ const Saftey = () => {
         </aside>
       </div>
       <div
-              className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
-              style={{ backgroundImage: `url(${bg})` }}
-            >
-          <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto border-2" >
-            <h1 className="text-white text-4xl font-semibold text-center">
-              Safety Drills
-            </h1>
-            <div className="h-[55vh] mt-4 overflow-y-auto scrollbar-hide">
+        className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto border-2">
+          <h1 className="text-white text-4xl font-semibold text-center">
+            Safety Drills
+          </h1>
+          <div className="h-[55vh] mt-4 overflow-y-auto scrollbar-hide">
             <table className=" min-w-full shadow-md">
-                <thead className="bg-[#32363a]">
-                  <tr className="bg-[#32363a] text-center w-auto">
-                    <th className="text-white border p-2">Drill_ID</th>
-                    <th className="text-white border p-2">training_type</th>
-                    <th className="text-white border p-2">Scheduled Date</th>
-                    <th className="text-white border p-2">Incharge</th>
+              <thead className="bg-[#32363a]">
+                <tr className="bg-[#32363a] text-center w-auto">
+                  <th className="text-white border p-2">Drill_ID</th>
+                  <th className="text-white border p-2">training_type</th>
+                  <th className="text-white border p-2">Scheduled Date</th>
+                  <th className="text-white border p-2">Incharge</th>
+                  {userRole.role !== "owner" && (
+                    <th className="text-white border p-2">Action</th>
+                  )}
+                </tr>
+              </thead>
+              <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide bg-[#fff1fe] ">
+                {drills.map((item) => (
+                  <tr
+                    key={item.drill_id}
+                    className="hover:bg-gray-100 text-center"
+                  >
+                    <td className="border p-2">{item.drill_id}</td>
+                    <td className="border p-2">{item.training_type}</td>
+                    <td className="border p-2">
+                      {item.scheduled_date.slice(0, 10)}
+                    </td>
+                    <td className="border p-2">{item.incharge}</td>
                     {userRole.role !== "owner" && (
-                      <th className="text-white border p-2">Action</th>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          className="px-4 py-1 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
+                          onClick={() => openModal(item)}
+                        >
+                          update
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-1 ml-2 bg-[#365486]  font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
+                          onClick={() => deleteItem(item._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
                     )}
                   </tr>
-                </thead>
-                <tbody className="max-h-[400px] overflow-y-auto scrollbar-hide bg-[#fff1fe] ">
-                  {drills.map((item) => (
-                    <tr
-                      key={item.drill_id}
-                      className="hover:bg-gray-100 text-center"
-                    >
-                      <td className="border p-2">{item.drill_id}</td>
-                      <td className="border p-2">{item.training_type}</td>
-                      <td className="border p-2">
-                        {item.scheduled_date.slice(0, 10)}
-                      </td>
-                      <td className="border p-2">{item.incharge}</td>
-                      {userRole.role !== "owner" && (
-                        <td className="border border-gray-300 px-4 py-2">
-                          <button
-                            className="px-4 py-1 bg-[#424769] font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
-                            onClick={() => openModal(item)}
-                          >
-                            update
-                          </button>
-                          <button
-                            type="button"
-                            className="px-4 py-1 ml-2 bg-[#365486]  font-semibold hover:bg-gray-600 rounded-md text-white outline-none"
-                            // onClick={() => deleteItem(item._id)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-          {userRole.role !== "owner" && (
-            <button
-              className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
-              onClick={openAddModal}
-            >
-              Add
-            </button>
-          )}
         </div>
+        {userRole.role !== "owner" && (
+          <button
+            className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
+            onClick={openAddModal}
+          >
+            Add
+          </button>
+        )}
+      </div>
 
       {/* popup form to update or delete*/}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg w-1/3 overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4">Update Drill</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Drill</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-8 text-lg font-semibold">
@@ -242,22 +261,34 @@ const Saftey = () => {
               </div>
 
               <label className="block mb-2 font-semibold">Type</label>
-              <input
+              <select
                 name="training_type"
                 type="text"
-                onChange={handleChange2}
-                defaultValue={selectedItem?.training_type}
                 className="w-full p-2 border rounded mb-4"
-              />
+                onChange={handleChange2}
+                value={selectedItem.training_type}
+              >
+                <option value="Fire Safety Drill">Fire Safety Drill</option>
+                <option value="Gas Leak Response">Gas Leak Response</option>
+                <option value="Structural Collapse Drill">Structural Collapse Drill</option>
+                <option value="Evacuation Drill">Evacuation Drill</option>
+                <option value="First Aid Training">First Aid Training</option>
+                <option value="Equipment Safety">Equipment Safety</option>
+              </select>
 
               <label className="block mb-2 font-semibold">Incharge</label>
-              <input
+              <select
                 name="incharge"
                 type="text"
-                onChange={handleChange2}
-                defaultValue={selectedItem?.incharge}
                 className="w-full p-2 border rounded mb-4"
-              />
+                defaultValue={selectedItem?.incharge}
+                onChange={handleChange2}
+              >
+                {Incharge.map((item) => (
+                  <option value={item.Name}>{item.Name}</option>
+                ))}
+              </select>
+
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
@@ -283,16 +314,34 @@ const Saftey = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Add New Item</h2>
             <form>
               <label className="block mb-2 font-semibold">Type</label>
-              <input
+              <select
                 name="training_type"
                 type="text"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
                 value={newItem.training_type}
-              />
+              >
+                <option value="">--Select training type--</option>
+                <option value="Fire Safety Drill">Fire Safety Drill</option>
+                <option value="Gas Leak Response">Gas Leak Response</option>
+                <option value="Structural Collapse Drill">Structural Collapse Drill</option>
+                <option value="Evacuation Drill">Evacuation Drill</option>
+                <option value="First Aid Training">First Aid Training</option>
+                <option value="Equipment Safety">Equipment Safety</option>
+              </select>
+              
+
+
+
+
+
+
+
+
+
               <label className="block mb-2 font-semibold">Date</label>
               <input
                 name="scheduled_date"
@@ -302,13 +351,17 @@ const Saftey = () => {
                 value={newItem.scheduled_date}
               />
               <label className="block mb-2 font-semibold">Incharge</label>
-              <input
+              <select
                 name="incharge"
                 type="text"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
-                value={newItem.incharge}
-              />
+              >
+                <option value="">--choose an option--</option>
+                {Incharge.map((item) => (
+                  <option value={item.Name}>{item.Name}</option>
+                ))}
+              </select>
 
               <div className="flex justify-end space-x-2">
                 <button

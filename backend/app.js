@@ -14,6 +14,8 @@ const SMP = require("./model/smpSchema.js");
 const Drills = require("./model/trainingSchema.js");
 const Jobs = require("./model/jobSchema.js");
 const Production = require("./model/productionSchema.js");
+const Mine = require("./model/mineSchema.js");
+const Employee = require("./model/employeeSchema.js");
 
 
 app.use(
@@ -147,6 +149,15 @@ app.put("/safety/update/:id", async (req, res) => {
     res.json(updatedItem);
   } catch (error) {
     res.status(500).json({ error: "Error updating item" });
+  }
+});
+app.delete("/safety/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Drills.findByIdAndDelete(id);
+    res.json({ message: "Item deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting item" });
   }
 });
 
@@ -345,6 +356,7 @@ app.put("/production/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;
+    console.log(data)
     const updatedItem = await Production.findByIdAndUpdate(id, data);
 
     res.json(updatedItem);
@@ -357,10 +369,10 @@ app.post("/production/addItem", async (req, res) => {
   const newId = await getNextId("productionId");
   const newItem = {
     Production_Id: `PRO${newId}`, // Unique auto increment
-    Mine_Id: req.body.mine_id,
-    Date: req.body.date,
-    Quantity: req.body.quantity,
-    Quality: req.body.quality
+    Mine_Id: req.body.Mine_id,
+    Date: req.body.Date,
+    Quantity: req.body.Quantity,
+    Quality: req.body.Quality
   };
   console.log(newItem);
   try {
@@ -371,6 +383,20 @@ app.post("/production/addItem", async (req, res) => {
     res.status(500).send({ error: "Error saving report" });
   }
 });
+
+
+//Mine
+app.get("/mine", async (req, res) => {
+  const items = await Mine.find();
+  res.send(items);
+});
+
+//Employee
+app.get("/employee", async (req, res) => {
+  const items = await Employee.find();
+  res.send(items);
+});
+
 
 //START SERVER
 app.listen(5000, () => {

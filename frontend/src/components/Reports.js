@@ -11,6 +11,8 @@ import bg from "../maps/bg.jpg";
 const Reports = () => {
   const navigate = useNavigate();
   const [smp, setSmp] = useState([]);
+  const [employee, setEmployee] = useState([]);
+  const [mine, setMine] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -54,6 +56,26 @@ const Reports = () => {
       .catch((error) => {
         console.error("Error fetching inventory data:", error);
       });
+
+    axios
+      .get("http://localhost:5000/employee", {}) // Update if deployed
+      .then((response) => {
+        setEmployee(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching transport data:", error);
+      });
+
+    axios
+      .get("http://localhost:5000/mine", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setMine(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Mine info:", error);
+      });
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
     const { role } = parsedData[0];
@@ -61,6 +83,8 @@ const Reports = () => {
       role: role,
     });
   }, []);
+
+  const Inspector = employee.filter((item) => item.Role === "Mine_Inspectors");
 
   //popup form functions
   const openModal = (item) => {
@@ -195,7 +219,7 @@ const Reports = () => {
         className="w-[80vw] h-[90vh] fixed top-0 right-0 overflow-y-auto scrollbar-hide bg-cover"
         style={{ backgroundImage: `url(${bg})` }}
       >
-        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto border-2">
+        <div className="p-4 w-5/6 h-[78vh] mt-12  bg-[#46505af5] mx-auto">
           <h1 className="text-white text-4xl font-semibold text-center">
             SMP REPORTS
           </h1>
@@ -290,7 +314,7 @@ const Reports = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="p-6 bg-gray-300 shadow-lg border-8 border-gray-600 w-2/4">
-            <h2 className="text-xl font-bold mb-4">Update SMP</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update SMP</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-2 font-semibold text-lg">
@@ -305,13 +329,18 @@ const Reports = () => {
                 <label className="block ml-4 mb-2 mt-2 mr-11 font-semibold text-lg">
                   Mine Id
                 </label>
-                <input
+                
+                <select
                   name="mine_id"
                   type="text"
-                  defaultValue={reportData?.mine_id}
-                  onChange={handleUpdate}
                   className="w-[40%] p-2 border rounded mb-4"
-                />
+                  onChange={handleUpdate}
+                  defaultValue={reportData?.mine_id}
+                >
+                  {mine.map((item) => (
+                    <option value={item.Mine_Id}>{item.Mine_Id}</option>
+                  ))}
+                </select>
               </div>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-12 text-lg font-semibold">
@@ -328,15 +357,21 @@ const Reports = () => {
                 <label className="block mb-2 mt-2 mr-2 ml-2 text-lg font-semibold">
                   Inspected By
                 </label>
-                <input
-                  name="inspected_by"
-                  type="text"
-                  defaultValue={reportData?.inspected_by}
-                  onChange={handleUpdate}
-                  className="w-[40%] p-2 border rounded mb-4"
-                />
+                <select
+                name="inspected_by"
+                type="text"
+                className="w-[40%] p-2 border rounded mb-4"
+                defaultValue={reportData?.inspected_by}
+                onChange={handleUpdate}
+              >
+                {Inspector.map((item) => (
+                  <option value={item.Name}>{item.Name}</option>
+                ))}
+              </select>
               </div>
-              <label className="block mb-2 font-semibold text-lg">Findings</label>
+              <label className="block mb-2 font-semibold text-lg">
+                Findings
+              </label>
               <input
                 name="inspected_by"
                 type="text"
@@ -344,7 +379,9 @@ const Reports = () => {
                 onChange={handleUpdate}
                 className="w-full p-2 border rounded mb-4"
               />
-              <label className="block mb-2 font-semibold text-lg">Recommendations</label>
+              <label className="block mb-2 font-semibold text-lg">
+                Recommendations
+              </label>
               <input
                 name="inspected_by"
                 type="text"
@@ -377,19 +414,23 @@ const Reports = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="p-6 bg-gray-300 shadow-lg border-8 border-gray-600 w-2/4">
-            <h2 className="text-xl font-bold mb-4">ADD SMP</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">ADD SMP</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-2 font-semibold text-lg">
                   Mine Id
                 </label>
-                <input
+                <select
                   name="mine_id"
                   type="text"
                   className="w-[40%] p-2 border rounded mb-4"
-                  value={newItem.mine_id}
                   onChange={handleView}
-                />
+                >
+                  <option value="">--Select Mine--</option>
+                  {mine.map((item) => (
+                    <option value={item.Mine_Id}>{item.Mine_Id}</option>
+                  ))}
+                </select>
 
                 <label className="block mb-2 mt-2 mr-2 ml-2 font-semibold text-lg">
                   Date
@@ -402,7 +443,9 @@ const Reports = () => {
                   onChange={handleView}
                 />
               </div>
-              <label className="block mb-2 font-semibold text-lg">Findings</label>
+              <label className="block mb-2 font-semibold text-lg">
+                Findings
+              </label>
               <input
                 name="findings"
                 type="text"
@@ -410,7 +453,9 @@ const Reports = () => {
                 value={newItem.findings}
                 onChange={handleView}
               />
-              <label className="block mb-2 font-semibold text-lg">recommendations</label>
+              <label className="block mb-2 font-semibold text-lg">
+                recommendations
+              </label>
               <input
                 name="recommendations"
                 type="text"
@@ -418,14 +463,21 @@ const Reports = () => {
                 value={newItem.recommendations}
                 onChange={handleView}
               />
-              <label className="block mb-2 font-semibold text-lg">Inspected By</label>
-              <input
+              <label className="block mb-2 font-semibold text-lg">
+                Inspected By
+              </label>
+              <select
                 name="inspected_by"
                 type="text"
                 className="w-full p-2 border rounded mb-4"
                 value={newItem.inspected_by}
                 onChange={handleView}
-              />
+              >
+                <option value="">--Inspector--</option>
+                {Inspector.map((item) => (
+                  <option value={item.Name}>{item.Name}</option>
+                ))}
+              </select>
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"

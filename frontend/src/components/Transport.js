@@ -34,14 +34,17 @@ const Transport = () => {
   useEffect(() => {
     axios
       .get("http://localhost:5000/transport", {
-        // withCredentials: true, // ✅ Important: Send cookies
-      }) // Update if deployed
+      })
       .then((response) => {
         setTransport(response.data);
       })
       .catch((error) => {
         console.error("Error fetching transport data:", error);
       });
+
+
+
+      
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
     const { role } = parsedData[0];
@@ -194,7 +197,7 @@ const Transport = () => {
                   <th className="px-4 py-2">Vehical</th>
                   <th className="px-4 py-2">Date</th>
                   <th className="px-4 py-2">To</th>
-                  <th className="px-4 py-2">Qunatity</th>
+                  <th className="px-4 py-2">Quantity</th>
                   {userRole.role !== "owner" && (
                     <th className="px-4 py-2 w-40">Action</th>
                   )}
@@ -269,7 +272,7 @@ const Transport = () => {
                   <th className="px-4 py-2">Vehical</th>
                   <th className="px-4 py-2">Date</th>
                   <th className="px-4 py-2">To</th>
-                  <th className="px-4 py-2">Qunatity</th>
+                  <th className="px-4 py-2">Quantity</th>
                 </tr>
               </thead>
               <tbody className="max-h-4/5 overflow-y-auto scrollbar-hide bg-[#fff1fe] ">
