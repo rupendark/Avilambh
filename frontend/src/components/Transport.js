@@ -9,6 +9,7 @@ import bg from "../maps/bg.jpg";
 const Transport = () => {
   const navigate = useNavigate();
   const [transport, setTransport] = useState([]);
+  const [driver, setDriver] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -24,17 +25,36 @@ const Transport = () => {
 
   // Handle input change fr add
   const handleChange = (e) => {
-    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    if (name === "driver_name") {
+      const driverObj = driver.find((d) => d.driverName === value);
+      setNewItem({ ...newItem, vehicle_no: driverObj.vehicle_no , [name]: value });
+    } else if (name === "quantity") {
+      const numericValue = Math.min(1000, Number(value));
+      setNewItem({ ...newItem, [name]: numericValue });
+    } else {
+      setNewItem({ ...newItem, [name]: value });
+    }
   };
   //Handle input change fr update
   const handleChange2 = (e) => {
-    setSelectedItem({ ...selectedItem, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    if (name === "driver_name") {
+      const driverObj = driver.find((d) => d.driverName === value);
+      setSelectedItem({ ...selectedItem, vehicle_no: driverObj.vehicle_no , [name]: value });
+    } else if (name === "quantity") {
+      const numericValue = Math.min(1000, Number(value));
+      setSelectedItem({ ...selectedItem, [name]: numericValue });
+    } else {
+      setSelectedItem({ ...selectedItem, [name]: value });
+    }
   };
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/transport", {
-      })
+      .get("http://localhost:5000/transport", {})
       .then((response) => {
         setTransport(response.data);
       })
@@ -42,9 +62,15 @@ const Transport = () => {
         console.error("Error fetching transport data:", error);
       });
 
+    axios
+      .get("http://localhost:5000/drivers", {})
+      .then((response) => {
+        setDriver(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching driver data:", error);
+      });
 
-
-      
     const token = Cookies.get("jwtToken");
     const parsedData = JSON.parse(token.substring(2));
     const { role } = parsedData[0];
@@ -55,6 +81,18 @@ const Transport = () => {
 
   const completedTransport = transport.filter((item) => item.flag);
   const inCompletedTransport = transport.filter((item) => !item.flag);
+  const cities = [
+    "Mumbai",
+    "Pune",
+    "Nagpur",
+    "Nashik",
+    "Aurangabad",
+    "Solapur",
+    "Amravati",
+    "Kolhapur",
+    "Sangli",
+    "Thane",
+  ];
 
   //popup form functions
   const openModal = (item) => {
@@ -300,7 +338,7 @@ const Transport = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-          <h2 className="text-xl font-bold mb-4">Update Inventory</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Inventory</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-2 font-semibold text-lg">
@@ -308,8 +346,8 @@ const Transport = () => {
                 </label>
                 <input
                   name="transport_id"
-                  type="text"
-                  defaultValue={selectedItem?.transport_id}
+                  type="String"
+                  defaultValue={selectedItem.transport_id}
                   className="w-[30%] p-2 border rounded mb-4 mr-4"
                   readOnly="readonly"
                 />
@@ -318,10 +356,10 @@ const Transport = () => {
                 </label>
                 <input
                   name="vehicle_no"
-                  type="text"
-                  onChange={handleChange2}
-                  defaultValue={selectedItem?.vehicle_no}
+                  type="String"
+                  Value={selectedItem.vehicle_no}
                   className="w-[40%] p-2 border rounded mb-4"
+                  readOnly="readonly"
                 />
               </div>
               <div className="flex">
@@ -330,9 +368,9 @@ const Transport = () => {
                 </label>
                 <input
                   name="transport_date"
-                  type="text"
+                  type="date"
                   onChange={handleChange2}
-                  defaultValue={selectedItem?.transport_date.slice(0, 10)}
+                  defaultValue={selectedItem.transport_date.slice(0, 10)}
                   className="w-[30%]  p-2 border rounded mb-4 mr-2"
                 />
                 <label className="block mb-2 mt-2 mr-2 font-semibold text-lg">
@@ -340,30 +378,39 @@ const Transport = () => {
                 </label>
                 <input
                   name="quantity"
+                  className="w-[40%]  p-2 border rounded mb-4"
                   type="number"
                   onChange={handleChange2}
-                  defaultValue={selectedItem?.quantity}
-                  className="w-[40%]  p-2 border rounded mb-4"
+                  min="0"
+                  value={selectedItem.quantity}
                 />
               </div>
               <label className="block mb-2 font-semibold text-lg">Driver</label>
-              <input
+              <select
                 name="driver_name"
-                type="text"
-                onChange={handleChange2}
-                defaultValue={selectedItem?.driver_name}
+                type="String"
                 className="w-full p-2 border rounded mb-4"
-              />
+                onChange={handleChange2}
+                defaultValue={selectedItem.driver_name}
+              >
+                {driver.map((item) => (
+                  <option value={item.driverName}>{item.driverName}</option>
+                ))}
+              </select>
               <label className="block mb-2 font-semibold text-lg">
                 Destination
               </label>
-              <input
+              <select
                 name="destination"
-                type="text"
-                onChange={handleChange2}
-                defaultValue={selectedItem?.destination}
+                type="String"
                 className="w-full p-2 border rounded mb-4"
-              />
+                onChange={handleChange2}
+                value={selectedItem.destination}
+              >
+                {cities.map((item) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </select>
 
               <div className="flex justify-end space-x-2">
                 <button
@@ -390,7 +437,7 @@ const Transport = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="p-6 bg-gray-300 shadow-lg border-8 border-gray-600 w-2/4">
-            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Add New Item</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-8 ml-2 font-semibold text-lg">
@@ -409,39 +456,50 @@ const Transport = () => {
                 <input
                   name="quantity"
                   type="number"
-                  onChange={handleChange}
-                  defaultValue={newItem.quantity}
                   className="w-[40%]  p-2 border rounded mb-4"
+                  onChange={handleChange}
+                  min="0"
+                  value={newItem.quantity}
                 />
               </div>
               <label className="block mb-2 font-semibold text-lg">Driver</label>
-              <input
+              <select
                 name="driver_name"
-                type="text"
+                type="String"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
-                value={newItem.driver_name}
-              />
+              >
+                <option value="">--Select Driver--</option>
+                {driver.map((item) => (
+                  <option value={item.driverName}>{item.driverName}</option>
+                ))}
+              </select>
               <label className="block mb-2 font-semibold text-lg">
                 Vehical_no
               </label>
               <input
                 name="vehicle_no"
-                type="text"
-                className="w-full p-2 border rounded mb-4"
-                onChange={handleChange}
+                type="String"
                 value={newItem.vehicle_no}
+                className="w-full p-2 border rounded mb-4"
+                readOnly="readonly"
               />
               <label className="block mb-2 font-semibold text-lg">
                 Destination
               </label>
-              <input
+              <select
                 name="destination"
-                type="text"
+                type="String"
                 className="w-full p-2 border rounded mb-4"
                 onChange={handleChange}
                 value={newItem.destination}
-              />
+              >
+                <option value="">--Select Destination--</option>
+                {cities.map((item) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </select>
+
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"

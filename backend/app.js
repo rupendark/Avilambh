@@ -16,7 +16,7 @@ const Jobs = require("./model/jobSchema.js");
 const Production = require("./model/productionSchema.js");
 const Mine = require("./model/mineSchema.js");
 const Employee = require("./model/employeeSchema.js");
-
+const Drivers = require("./model/driverSchema.js");
 
 app.use(
   cors({
@@ -215,7 +215,6 @@ app.get("/transport", async (req, res) => {
 });
 app.post("/transport/addItem", async (req, res) => {
   try {
-    console.log(req.body);
     const newId = await getNextId("transportId");
 
     const newItem = {
@@ -397,6 +396,12 @@ app.get("/employee", async (req, res) => {
   res.send(items);
 });
 
+
+// Drivers
+app.get("/drivers", async (req, res) => {
+  const items = await Drivers.find();
+  res.send(items);
+});
 
 //START SERVER
 app.listen(5000, () => {

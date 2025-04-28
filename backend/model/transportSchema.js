@@ -10,7 +10,7 @@ const transportSchema = new mongoose.Schema(
     quantity: { type: Number, required: true },
     flag: { type: Boolean, required: true },
   },
-  { collection: "transport" }
+  { collection: "Transport" }
 ); // Explicitly reference the collection name
 
 
