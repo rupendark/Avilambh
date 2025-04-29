@@ -266,7 +266,7 @@ const Inventory = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4">Update Inventory</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Inventory</h2>
             <form>
               <label className="block mb-2">Item Id</label>
               <input
@@ -327,7 +327,7 @@ const Inventory = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Add New Item</h2>
             <form>
               <label className="block mb-2">Item Name</label>
               <input

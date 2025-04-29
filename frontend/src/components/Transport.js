@@ -338,7 +338,7 @@ const Transport = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Inventory</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Scheduled transport</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-2 font-semibold text-lg">
@@ -437,7 +437,7 @@ const Transport = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="p-6 bg-gray-300 shadow-lg border-8 border-gray-600 w-2/4">
-            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Add New Item</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Schedule New Transport</h2>
             <form>
               <div className="flex">
                 <label className="block mb-2 mt-2 mr-8 ml-2 font-semibold text-lg">
