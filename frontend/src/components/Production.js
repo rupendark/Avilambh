@@ -50,7 +50,6 @@ const Production = () => {
     } else {
       setProductionData({ ...productionData, [e.target.name]: e.target.value });
     }
-    
   };
 
   useEffect(() => {
@@ -261,19 +260,23 @@ const Production = () => {
               </tbody>
             </table>
           </div>
-          <button
-            className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
-            onClick={() => openAddModal()}
-          >
-            Add
-          </button>
+          {userRole.role !== "owner" && (
+            <button
+              className="absolute bottom-16 right-32 bg-[#a3acac] text-lg font-bold hover:bg-gray-500 text-white px-6 py-1 rounded-lg"
+              onClick={() => openAddModal()}
+            >
+              Add
+            </button>
+          )}
         </div>
       </div>
       {/* popup form to update*/}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">Update Production</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">
+              Update Production
+            </h2>
             <form>
               <label className="block mb-2">Production Id</label>
               <input
@@ -351,7 +354,9 @@ const Production = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-gray-300 border-8 border-gray-600 p-6 w-1/3 rounded-lg shadow-lg overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">ADD Production</h2>
+            <h2 className="text-xl font-bold mb-4 w-fit mx-auto">
+              ADD Production
+            </h2>
             <form>
               <label className="block mb-2">Mine Id</label>
               <select
